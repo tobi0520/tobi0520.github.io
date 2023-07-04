@@ -1,0 +1,579 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>OpenBMB介绍 | 大智若愚</title><meta name="author" content="Yang Zhi"><meta name="copyright" content="Yang Zhi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="大语言模型-OpenBMB社区工具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenBMB介绍">
+<meta property="og:url" content="https://tobi0520.github.io/2023/06/11/NLP/openbmb_intro/index.html">
+<meta property="og:site_name" content="大智若愚">
+<meta property="og:description" content="大语言模型-OpenBMB社区工具">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.openbmb.org/openbmb/img/bmb_system.c1600ab.webp">
+<meta property="article:published_time" content="2023-06-11T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-06-12T05:27:44.840Z">
+<meta property="article:author" content="Yang Zhi">
+<meta property="article:tag" content="NLP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.openbmb.org/openbmb/img/bmb_system.c1600ab.webp"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/20230514173724.png"><link rel="canonical" href="https://tobi0520.github.io/2023/06/11/NLP/openbmb_intro/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.17/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Yang Zhi","link":"链接: ","source":"来源: 大智若愚","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdnjs.cloudflare.com/ajax/libs/flickr-justified-gallery/2.1.2/fjGallery.min.js',
+      css: 'https://cdnjs.cloudflare.com/ajax/libs/flickr-justified-gallery/2.1.2/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'OpenBMB介绍',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-06-12 13:27:44'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/font-awesome-animation.min.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/tag_plugins.css" media="defer" onload="this.media='all'"><script src="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/carousel-touch.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+document.addEventListener('pjax:send', () => {
+  Pace.restart()
+})
+</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.min.css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js"></script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://dogefs.s3.ladydaily.com/~/source/wallhaven/full/o5/wallhaven-o5yqr5.jpg?w=2560&amp;h=1440&amp;fmt=webp" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-house"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-clock"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-book"></i><span> 资料</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-comments"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-address-card"></i><span> 关于我</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://www.openbmb.org/openbmb/img/bmb_system.c1600ab.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="大智若愚"><img class="site-icon" src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/20230514173724.png"/><span class="site-name">大智若愚</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-house"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-clock"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-book"></i><span> 资料</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-comments"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-address-card"></i><span> 关于我</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">OpenBMB介绍</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-06-11T00:00:00.000Z" title="发表于 2023-06-11 08:00:00">2023-06-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-06-12T05:27:44.840Z" title="更新于 2023-06-12 13:27:44">2023-06-12</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">7.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>24分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="OpenBMB介绍"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="OPenBMB介绍"><a href="#OPenBMB介绍" class="headerlink" title="OPenBMB介绍"></a>OPenBMB介绍</h1><p><strong>OpenBMB</strong>全称为<strong>Open Lab for Big Model Base</strong>，旨在<strong>打造大规模预训练语言模型库与相关工具，加速百亿级以上大模型的训练、微调与推理，降低大模型使用门槛</strong>，与国内外开发者共同努力形成大模型开源社区，推动大模型生态发展，实现大模型的<strong>标准化</strong>、<strong>普及化</strong>和<strong>实用化</strong>，<strong>让大模型飞入千家万户</strong>。</p>
+<h2 id="OpenBMB能力体系"><a href="#OpenBMB能力体系" class="headerlink" title="OpenBMB能力体系"></a>OpenBMB能力体系</h2><p>谋定而动，OpenBMB将从<strong>数据、工具、模型、协议</strong>四个层面构建<strong>应用便捷、能力全面、使用规范</strong>的大规模预训练模型库。</p>
+<p><img src="https://openbmb.oss-cn-hongkong.aliyuncs.com/openbmb-blog/OpenBMB%EF%BC%9A%E8%AE%A9%E5%A4%A7%E6%A8%A1%E5%9E%8B%E9%A3%9E%E5%85%A5%E5%8D%83%E5%AE%B6%E4%B8%87%E6%88%B7/1649300434530-3.png" alt="OpenBMB 能力体系"></p>
+<p><strong>OpenBMB能力体系</strong>具体包括：</p>
+<blockquote>
+<p><strong>数据层</strong></p>
+<p>构建大规模数据<strong>自动收集、自动清洗、高效存储</strong>模块与相关工具，为大模型训练提供数据支持。</p>
+<p><strong>工具层</strong></p>
+<p>聚焦<strong>模型训练、模型微调、模型推理、模型应用</strong>四个大模型主要场景，推出配套开源工具包，提升各环节效率，降低计算和人力成本。</p>
+<p><strong>模型层</strong></p>
+<p>构建OpenBMB工具支持的开源大模型库，包括BERT、GPT、T5等通用大模型和<strong>CPM、EVA、GLM</strong>等悟道开源大模型，并不断完善添加新模型，形成覆盖全面的模型能力。</p>
+<p>OpenBMB开发的模型：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2012.00413.pdf">CPM</a>：中国首个中文大模型，2020年11月发布，26亿参数规模。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2106.10715.pdf">CPM2</a>：CPM大模型第2版，2021年6月发布。110亿参数规模，基于MoE架构可达到1980亿。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.openbmb.org/community/blogs/blogpage?id=98afef2ce45f4fe9a4bc15a66d7ccb92">CPM-Ant</a> (2022/05/29-2022/08/05) ：最新的百亿大模型训练直播项目<a target="_blank" rel="noopener" href="https://live.openbmb.org/"><strong>CPM-Live</strong></a>的第一期模型 CPM-Ant。 CPM-Ant是一个开源的中文预训练语言模型，拥有10B参数。<a target="_blank" rel="noopener" href="https://github.com/OpenBMB/CPM-Live">code</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/OpenBMB/CPM-Bee">CPM-Bee</a>(2022/10/13-2023/05/27)：一个完全开源、允许商用的百亿参数中英文基座模型，也是<a target="_blank" rel="noopener" href="https://live.openbmb.org/"><strong>CPM-Live</strong></a>训练的第二个里程碑。它采用Transformer自回归架构（auto-regressive），在超万亿（trillion）高质量语料上进行预训练，拥有强大的基础能力。CPM-Bee 一网打尽多种能力，可以准确地进行语义理解，高效完成各类基础任务，包括：<strong>文字填空、文本生成、翻译、问答、评分预测、文本选择题</strong> 等等。考虑到用户使用模型的易用性，我们在预训练阶段将模型的输入输出设计成了 <strong>JSON</strong> 结构化形式，用户只需调整不同任务字段，就可以完成各类任务。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;文本生成&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;input&quot;</span><span class="punctuation">:</span> <span class="string">&quot;今天天气很好，我和妈妈一起去公园，&lt;mask&gt;&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;prompt&quot;</span><span class="punctuation">:</span> <span class="string">&quot;往后写两句话&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;&lt;ans&gt;&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="attr">&quot;翻译&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;input&quot;</span><span class="punctuation">:</span> <span class="string">&quot;北京是中国的首都&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;prompt&quot;</span><span class="punctuation">:</span> <span class="string">&quot;中翻英&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;&lt;ans&gt;&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="attr">&quot;评分预测&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;input&quot;</span><span class="punctuation">:</span><span class="string">&quot;之前多次聚餐都选择这里，有各种大小的包房同时能容纳很多人，</span></span><br><span class="line"><span class="string">         环境好有特色还有表演，整体聚餐氛围一下被带动起来。现在由于炭火改成了电烤羊，</span></span><br><span class="line"><span class="string">         口感真的不如从前，不过其他菜品都还是不错，烤羊剩下的拆骨肉最后还能再加工一下椒盐的也很好吃。&quot;</span><span class="punctuation">,</span></span><br><span class="line">         <span class="attr">&quot;question&quot;</span><span class="punctuation">:</span><span class="string">&quot;评分是多少？(1-5)&quot;</span><span class="punctuation">,</span><span class="attr">&quot;&lt;ans&gt;&quot;</span><span class="punctuation">:</span><span class="string">&quot;&quot;</span><span class="punctuation">&#125;</span></span><br><span class="line"><span class="attr">&quot;选择题&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;input&quot;</span><span class="punctuation">:</span> <span class="string">&quot;父母都希望自己的孩子诚实、勇敢、有礼貌。要想让孩子成为这样的人</span></span><br><span class="line"><span class="string">        ，父母首先得从自己做起，要是连自己都做不到，又怎能要求孩子做到呢？&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;options&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="attr">&quot;&lt;option_0&gt;&quot;</span><span class="punctuation">:</span> <span class="string">&quot;少提要求&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;&lt;option_1&gt;&quot;</span><span class="punctuation">:</span> <span class="string">&quot;降低标准&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;&lt;option_2&gt;&quot;</span><span class="punctuation">:</span> <span class="string">&quot;自己先做好&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;&lt;option_3&gt;&quot;</span><span class="punctuation">:</span> <span class="string">&quot;让孩子拿主意&quot;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span> </span><br><span class="line">	<span class="attr">&quot;question&quot;</span><span class="punctuation">:</span> <span class="string">&quot;教育孩子时，父母应该：&quot;</span><span class="punctuation">,</span> <span class="attr">&quot;&lt;ans&gt;&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://openbmb.oss-cn-hongkong.aliyuncs.com/openbmb-blog/openbmb/1686121720610-blobid5.webp" alt="CPM-Bee体系"></p>
+</li>
+</ul>
+<p><strong>协议层</strong></p>
+<p>发布<strong>通用模型许可协议</strong>，规范与保护大模型发布使用过程中发布者与使用者权利与义务，目前协议初稿已经开源（<a target="_blank" rel="noopener" href="https://www.openbmb.org/license）">https://www.openbmb.org/license）</a></p>
+</blockquote>
+<p>基于发起人团队前期工作，OpenBMB设计了大模型全流程研发框架，并初步开发了相关工具，这些工具各司其职、相互协作，共同实现大模型从训练、微调到推理的全流程高效计算。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/image-20230611141559218.png" alt="OpenBMB 工具架构"></p>
+<h1 id="OpenBMB工具"><a href="#OpenBMB工具" class="headerlink" title="OpenBMB工具"></a>OpenBMB工具</h1><h1 id="OpenBMB模型训练套件"><a href="#OpenBMB模型训练套件" class="headerlink" title="OpenBMB模型训练套件"></a>OpenBMB模型训练套件</h1><h2 id="BMData：大模型“原料”收集器"><a href="#BMData：大模型“原料”收集器" class="headerlink" title="BMData：大模型“原料”收集器"></a>BMData：大模型“原料”收集器</h2><p>BMData进行<strong>高质量数据清洗、处理与存储</strong>，为大模型训练提供全面、综合的数据支持。</p>
+<p>注：还在开发中～</p>
+<h2 id="BMTrain：大模型训练“发动机”"><a href="#BMTrain：大模型训练“发动机”" class="headerlink" title="BMTrain：大模型训练“发动机”"></a>BMTrain：大模型训练“发动机”</h2><p><strong>大模型训练“发动机”。</strong>BMTrain进行<strong>高效的大模型预训练与微调。</strong>与DeepSpeed等框架相比，BMTrain训练模型成本可节省<strong>90%</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://www.openbmb.org/community/blogs/blogpage?id=8c130256a3d14b8ca88c59a212da2e38">BMTrain介绍</a>，<a target="_blank" rel="noopener" href="https://www.openbmb.org/community/blogs/blogpage?id=3bff5bc60f96408f81101774c2aec7dd">BMTrain技术原理浅析</a>，<a target="_blank" rel="noopener" href="https://github.com/OpenBMB/BMTrain">BMTrain code</a>和<a target="_blank" rel="noopener" href="https://bmtrain.readthedocs.io/en/latest/index.html">BMTrain’s Documentation</a></p>
+<h3 id="为什么需要BMTrain？"><a href="#为什么需要BMTrain？" class="headerlink" title="为什么需要BMTrain？"></a>为什么需要BMTrain？</h3><h4 id="算力成本高"><a href="#算力成本高" class="headerlink" title="算力成本高"></a>算力成本高</h4><p>模型巨大的参数量无法在单张显卡中完成存储与计算。OpenAI 训练 GPT-3 （约1750亿参数）使用了上千张 GPU，Google 训练 PaLM （约5000亿参数）使用了六千片 TPU，带来了高昂的训练成本，配置规模庞大的计算集群也十分困难。</p>
+<h4 id="编程难度大"><a href="#编程难度大" class="headerlink" title="编程难度大"></a>编程难度大</h4><p>为了利用分布式算力加速大模型的训练和微调，程序员需要编写复杂的分布式程序来驱动大模型。现有的框架（如DeepSpeed）已经能够较好地支持模型的分布式训练，但依然需要用户进行较为复杂的编程与配置。</p>
+<h4 id="计算速度低"><a href="#计算速度低" class="headerlink" title="计算速度低"></a>计算速度低</h4><p>在分布式训练框架中，不同计算节点之间需要频繁地进行通信，此时通信带宽往往成为模型的训练瓶颈，若不能合理设计通信策略并进行有效且正确的代码实现，训练模型所需的时间将被大大延长，不能充分发挥计算设备的潜力。</p>
+<h3 id="BMTrian的目的是什么？"><a href="#BMTrian的目的是什么？" class="headerlink" title="BMTrian的目的是什么？"></a>BMTrian的目的是什么？</h3><h4 id="高效率"><a href="#高效率" class="headerlink" title="高效率"></a>高效率</h4><p>作为大模型训练的 “发动机”，BMTrain 能够在任意数量的 GPU 上进行高效的大模型预训练与微调，最优化分布式框架的通信开销，在超大规模模型训练场景下与 DeepSpeed 等框架相比可以节省 90% 的算力成本。</p>
+<p><img src="https://www.openbmb.org/openbmb/img/bm_train_en.68b4bd9.png" alt="比较"></p>
+<h4 id="低资源"><a href="#低资源" class="headerlink" title="低资源"></a>低资源</h4><p>不同于OpenAI、Google 等机构的算力条件，为了让更多实验室和企业也能够训练大模型，我们致力于在保持高效计算前提下最小化大模型的算力需求，实现单张消费级显卡全参数微调 BERT-Large，8 台 A100 小集群训练 GPT-3，进一步降低大模型的算力门槛。</p>
+<p>在消费级显卡2080Ti上，BMTrain可以实现BERT-Large的微调（3亿参数，样本长度 512）。</p>
+<p><img src="https://openbmb.oss-cn-hongkong.aliyuncs.com/openbmb-blog/BMTrain%EF%BC%9A%E4%B8%BA%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E8%AE%A1%E7%AE%97%E6%88%90%E6%9C%AC%E8%8A%82%E7%9C%819%E6%88%90/1651770325147-bmtrain-5.png" alt="img"></p>
+<p>在较高规模算力条件下（显卡为A100 40GB，NVLink，400Gbps IB），BMTrain可以训练超大规模的 GPT-3（1750亿参数）。</p>
+<p><img src="https://openbmb.oss-cn-hongkong.aliyuncs.com/openbmb-blog/BMTrain%EF%BC%9A%E4%B8%BA%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E8%AE%A1%E7%AE%97%E6%88%90%E6%9C%AC%E8%8A%82%E7%9C%819%E6%88%90/1651833154770-bmtrain-new-2.png" alt="img"></p>
+<p>使用BMTrain或者ColossalAI，64卡A100跑完GPT-3的300B token大概需要2年，服务器与显卡租金大约900万左右。根据我们的实验估算，使用128张A100时，单卡吞吐量可以提升2.5倍以上，6个月可以跑完GPT-3，服务器租金大约500万左右。虽然训练出GPT-3的成本依然高昂，但与GPT-3的1200万美元相比，成本仍然节约了90%以上。</p>
+<h4 id="可扩展"><a href="#可扩展" class="headerlink" title="可扩展"></a>可扩展</h4><p>在编程难度方面，我们致力做最简洁最有效的封装，仅使用少量的代码替换，即可达到与原生 PyTorch 一致的编程体验，一键安装工具包降低配置难度，让大模型真正飞入千家万户。BMTrain 与 ModelCenter 共同组成了高效分布式预训练框架，适用于任意的 Transformer 结构，可以在较少数量的 GPU 上训练，且高度兼容 PyTorch、Transformers 库，学习成本极低。目前我们已经支持了常用的英文模型如 BERT、GPT、T5、RoBERTa 以及中文模型如 CPM-1、CPM-2 等。</p>
+<p><img src="https://www.openbmb.org/openbmb/img/bm_train_use.5396b7d.png" alt="使用示例"></p>
+<h3 id="如何去实现？"><a href="#如何去实现？" class="headerlink" title="如何去实现？"></a>如何去实现？</h3><ol>
+<li>分析GPU显存在哪里消耗？</li>
+<li>理解多张显卡合作模式</li>
+</ol>
+<h4 id="核心技术"><a href="#核心技术" class="headerlink" title="核心技术"></a>核心技术</h4><p><strong><em>这块还要继续深入了解</em></strong></p>
+<ul>
+<li>ZeRO-3 Optimization</li>
+<li>Overlap Communication and Computation</li>
+<li>CPU Offload</li>
+</ul>
+<p>详见<a target="_blank" rel="noopener" href="https://bmtrain.readthedocs.io/en/latest/notes/tech.html">Introduction to Core Technology — BMTrain documentation</a></p>
+<h2 id="BMCook：大模型“瘦身”工具库"><a href="#BMCook：大模型“瘦身”工具库" class="headerlink" title="BMCook：大模型“瘦身”工具库"></a>BMCook：大模型“瘦身”工具库</h2><p>BMCook进行<strong>大模型高效压缩</strong>，提升运行效率。通过量化、剪枝、蒸馏、专家化等算法组合，可保持原模型<strong>90%+</strong>效果，<strong>模型推理加速</strong>10倍</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/OpenBMB/BMCook">github’s code</a>，<a target="_blank" rel="noopener" href="https://bmcook.readthedocs.io/en/main/index.html">BMCook’s documentation</a></p>
+<h3 id="为什么需要BMCook？"><a href="#为什么需要BMCook？" class="headerlink" title="为什么需要BMCook？"></a>为什么需要BMCook？</h3><h4 id="PLM规模爆炸增长"><a href="#PLM规模爆炸增长" class="headerlink" title="PLM规模爆炸增长"></a>PLM规模爆炸增长</h4><p>PLM的模型规模一直在以每年约10倍的速度增长</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Organization</th>
+<th>Name</th>
+<th>Model Size</th>
+<th>Data Size</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2018.6</td>
+<td>OpenAI</td>
+<td>GPT</td>
+<td>110M</td>
+<td>4GB</td>
+<td>3 Days</td>
+</tr>
+<tr>
+<td>2018.10</td>
+<td>Google</td>
+<td>BERT</td>
+<td>330M</td>
+<td>16GB</td>
+<td>50 Days</td>
+</tr>
+<tr>
+<td>2019.2</td>
+<td>OpenAI</td>
+<td>GPT-2</td>
+<td>1.5B</td>
+<td>40GB</td>
+<td>200 Days</td>
+</tr>
+<tr>
+<td>2019.7</td>
+<td>Facebook</td>
+<td>RoBERTa</td>
+<td>330M</td>
+<td>160GB</td>
+<td>3 Years</td>
+</tr>
+<tr>
+<td>2019.10</td>
+<td>Google</td>
+<td>T5</td>
+<td>11B</td>
+<td>800GB</td>
+<td>66 Years</td>
+</tr>
+<tr>
+<td>2020.6</td>
+<td>OpenAI</td>
+<td>GPT-3</td>
+<td>175B</td>
+<td>2TB</td>
+<td>355 Years</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="巨大的计算成本"><a href="#巨大的计算成本" class="headerlink" title="巨大的计算成本"></a>巨大的计算成本</h4><p>不断增长的规模伴随着巨大的计算开销</p>
+<ul>
+<li><p>限制大型PLM在现实世界场景中的应用</p>
+</li>
+<li><p>导致大量碳排放</p>
+</li>
+</ul>
+<h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><ul>
+<li>Model Compression：将大模型压缩为小模型，以满足现实世界场景的需求。目的希望讲大模型压缩成小规模模型，同时需要基本上继承大模型的能力，能在现实场景应用，用更普通设备计算，希望在一张显卡上计算</li>
+</ul>
+<h3 id="现存方法"><a href="#现存方法" class="headerlink" title="现存方法"></a>现存方法</h3><p><strong><em>需要深入了解</em></strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/image-20230611144524504.png" alt="Model Compression"></p>
+<h4 id="Model-Pruning-2015：剪枝50-参数，可加速1倍"><a href="#Model-Pruning-2015：剪枝50-参数，可加速1倍" class="headerlink" title="Model Pruning-2015：剪枝50%参数，可加速1倍"></a>Model Pruning-2015：剪枝50%参数，可加速1倍</h4><p><a target="_blank" rel="noopener" href="https://proceedings.neurips.cc/paper/2015/file/ae0eb3eed39d2bcef4622b2499a05fe6-Paper.pdf">Model Pruning</a>：修剪通过删除不重要的参数来压缩神经网络。根据修剪的粒度，它被分为结构化修剪和非结构化修剪。在这个工具包中，我们实现了两种修剪方法。对于非结构化修剪，我们实现了2:4的稀疏模式来利用NVIDIA GPU的TensorCore，这带来了1倍的速度。</p>
+<h4 id="Model-Quantization-2021：提升4倍运算速度-，使用1-4存储空间"><a href="#Model-Quantization-2021：提升4倍运算速度-，使用1-4存储空间" class="headerlink" title="Model Quantization-2021：提升4倍运算速度 ，使用1/4存储空间"></a>Model Quantization-2021：提升4倍运算速度 ，使用1/4存储空间</h4><p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2103.13630.pdf">Model Quantization</a>：量化通过以低位精度表示参数，将神经网络压缩成更小的尺寸，例如8位整数（INT8）而不是32位浮点（FP32）。它通过以低精度存储参数和以低精度加速计算来减少内存占用空间。在这个工具包中，我们针对量化感知训练，在训练期间模拟低精度的计算，使模型参数适应低精度。我们将模型中的所有线性变换量化，这些变换涵盖了变压器计算的90%以上。对于令牌嵌入和注意力矩阵，我们仍然使用浮点，这确保了良好的性能，计算成本很小。</p>
+<h4 id="Model-MoEfication-2022：减少80-线性层参数，可加速1倍"><a href="#Model-MoEfication-2022：减少80-线性层参数，可加速1倍" class="headerlink" title="Model MoEfication-2022：减少80%线性层参数，可加速1倍"></a>Model MoEfication-2022：减少80%线性层参数，可加速1倍</h4><p>MoEfication利用了PLM中的稀疏激活现象，并将前馈网络拆分为几个小型专家网络，以进行PLM的条件计算。有关更多详细信息，请参阅<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2110.01786.pdf">本文</a>。</p>
+<h4 id="Knowledge-Distillation-2021：为以上模块提供更优监督型号"><a href="#Knowledge-Distillation-2021：为以上模块提供更优监督型号" class="headerlink" title="Knowledge Distillation-2021：为以上模块提供更优监督型号"></a>Knowledge Distillation-2021：为以上模块提供更优监督型号</h4><p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2006.05525.pdf">Knowledge Distillation</a>：知识蒸馏旨在<strong>缓解模型压缩导致的性能下降</strong>。与传统的预训练相比，它提供了更具信息性的训练目标。在这个工具包中，我们基于输出逻辑、中间隐藏状态和注意力矩阵实现知识蒸馏损失。在实践中，我们发现基于输出 logits 的损失就足够了。</p>
+<p>  <img src="https://www.openbmb.org/openbmb/img/bm_cook_sm.f514f6d.png" alt="img"></p>
+<h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><p><strong>任意组合</strong></p>
+<p>受益于解耦合的实现方式，我们可以任意组合压缩方法尽可能地加速模型。</p>
+<p><img src="https://www.openbmb.org/openbmb/img/bm_cook_combination.0934245.png" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/image-20230611145415016.png" alt="代码示例"></p>
+<h1 id="OpenBMB模型推理套件"><a href="#OpenBMB模型推理套件" class="headerlink" title="OpenBMB模型推理套件"></a>OpenBMB模型推理套件</h1><h2 id="BMinf-千元级显卡玩转大模型推理"><a href="#BMinf-千元级显卡玩转大模型推理" class="headerlink" title="BMinf-千元级显卡玩转大模型推理"></a>BMinf-千元级显卡玩转大模型推理</h2><p>OpenBMB核心模块，用于高效推理，可于Nvidia GTX 1060 6G显卡运行百亿大模型。</p>
+<p><a target="_blank" rel="noopener" href="https://aclanthology.org/2022.acl-demo.22.pdf">BMinf-paper</a>，<a target="_blank" rel="noopener" href="https://www.openbmb.org/community/blogs/blogpage?id=af7bf9bdcca54d3fb5efc4e904ccfb3b">BMInf-blog</a>，<a target="_blank" rel="noopener" href="https://github.com/OpenBMB/BMInf">BMInf-github</a>和<a target="_blank" rel="noopener" href="https://www.openbmb.org/documentation/bminf">BMInf-Document</a></p>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>最近在工业界与学术界，最热门的方向莫过于预训练语言模型。而具有百亿乃至千亿参数的大规模预训练语言模型，更是业界与学术界发力的热点。</p>
+<p>但现在大模型的应用却有着较高的门槛，排队申请或需要付费的API、较长的模型响应速度、推理所需要的较为昂贵的算力资源……种种因素都影响着大模型的快速应用与落地。对于普通的研究者与开发者来说，大模型可以说是看得见，却很难摸得着。</p>
+<p>由OpenBMB团队与北京智源研究院联合发布的一款低资源大模型推理工具包BMInf，一面世就获得了广大发烧友的喜爱，该项目已在GitHub获得237个Star，并且论文已被ACL 2022收录。下面，我将带领大家重温BMInf。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/image-20230611150100132.png" alt="image-20230611150100132"></p>
+<p>难题 ：</p>
+<ul>
+<li><p>所需硬件要求高：每个demo需要4*A100s</p>
+</li>
+<li><p>太慢：一次需求需要十秒</p>
+</li>
+<li><p>昂贵：4*A100s 是1200元每天</p>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/image-20230611150743830.png" alt="image"></p>
+</li>
+</ul>
+<p>另外一个思路：公共服务器至本地服务器。希望至少能在GTX1060运行</p>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/image-20230611150606695.png" alt="image-20230611150606695"></p>
+<h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h4><ul>
+<li><p><strong>硬件友好。</strong>BMInf最低支持在NVIDIA GTX 1060单卡运行百亿大模型，使用更好的GPU会有更好的运行性能。在显存支持进行大模型推理的情况下（如V100或A100显卡），BMInf的实现较现有PyTorch版本仍有较大性能提升。</p>
+</li>
+<li><p><strong>开源共享。</strong>模型参数开源共享，用户在本地即可部署运行，无需访问或申请API。</p>
+</li>
+<li><p><strong>能力全面。</strong>支持生成模型CPM1 [1]、通用模型CPM2 [2]、对话模型EVA [3]，模型能力覆盖文本补全、文本生成与对话。</p>
+</li>
+<li><p><strong>模型升级。</strong>基于持续学习推出百亿模型新升级CPM2.1，文本生成能力大幅提高</p>
+</li>
+<li><p><strong>应用便捷。</strong>基于工具包可以快速开发大模型相关下游应用。</p>
+</li>
+</ul>
+<h4 id="背后技术："><a href="#背后技术：" class="headerlink" title="背后技术："></a>背后技术：</h4><p><strong><em>深入了解</em></strong></p>
+<ul>
+<li><p><strong>模型压缩</strong>：如果不做任何特殊处理，运行一个22GB的模型需要一块显存大小至少为22GB的GPU。满足这样条件的GPU通常是很昂贵的（例如 V100 32GB, A100, RTX 3090，市场价均超过2万元），为了能让模型在更小显存的GPU上运行，开发者在保留模型原有结构的基础上，将模型中占比最大的线性层参数（占比99%）从16比特浮点数转换为了int8格式。为了让压缩后的模型更贴近于原来的效果，开发者在将参数转换后进行了几千次迭代的微调让模型适应新的参数精度，微调后的模型基本上已经达到了和原始模型相近的能力。在具体的PPL指标中，压缩后的模型相比于压缩前只相差了5~10左右。</p>
+</li>
+<li><p><strong>显存调度</strong>：在使用了模型压缩技术后，原本大小22GB的模型被压缩到了11GB，对于NVIDIA旗舰级别GPU来说（如GTX 1080Ti, RTX 2080Ti），11GB显存已经是可以摸到的门槛了，但是考虑到在推理过程中还需要使用一些额外的空间来存储中间变量，这样的显存容量依然不够。另外，能够拥有这样旗舰级别显卡的个人用户仍然较少，像GTX 1060 6G这样甜点级的GPU有着更加广泛的市场占有率。</p>
+<p>要让一个11GB大小的模型运行在显存容量只有6GB的GPU上，开发者使用了显存和内存的优化与调度技术。在运行过程中将需要用于进行运算的模型参数提前准备好并放置在显存中，而对于暂时不需要用到的部分，则放置在CPU内存中。</p>
+</li>
+</ul>
+<p><img src="https://openbmb.oss-cn-hongkong.aliyuncs.com/openbmb-blog/BMInf%EF%BC%9A%E5%8D%83%E5%85%83%E6%98%BE%E5%8D%A1%E7%8E%A9%E8%BD%AC%E7%99%BE%E4%BA%BF%E5%A4%A7%E6%A8%A1%E5%9E%8B/1649228673133-bminf-layers.png" alt="img"></p>
+<h4 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a>性能测试</h4><p><img src="https://openbmb.oss-cn-hongkong.aliyuncs.com/openbmb-blog/BMInf%EF%BC%9A%E5%8D%83%E5%85%83%E6%98%BE%E5%8D%A1%E7%8E%A9%E8%BD%AC%E7%99%BE%E4%BA%BF%E5%A4%A7%E6%A8%A1%E5%9E%8B/1649228852311-bminf-speed.png" alt="img"></p>
+<h4 id="支持模型"><a href="#支持模型" class="headerlink" title="支持模型"></a>支持模型</h4><p>BMInf目前支持下列模型：</p>
+<ul>
+<li><strong>CPM2.1</strong>. CPM2.1是CPM2的升级版本。CPM2是一个拥有110亿参数的通用中文预训练语言模型。基于CPM2，CPM2.1新增了一个生成式的预训练任务并基于持续学习范式进行训练。实验结果证明CPM2.1比CPM2具有更好的生成能力。</li>
+<li><strong>CPM1.</strong> CPM1是一个拥有26亿参数的生成式中文预训练语言模型。CPM1的模型架构与<a target="_blank" rel="noopener" href="https://www.openbmb.org/doc/bminf/zh/introduction-zh.html#ref">GPT</a> 类似，它能够被应用于广泛的自然语言处理任务，如对话、文章生成、完形填空和语言理解。</li>
+<li><strong>EVA.</strong> <a target="_blank" rel="noopener" href="https://www.openbmb.org/doc/bminf/zh/introduction-zh.html#ref">EVA </a>是一个有着28亿参数的中文预训练对话模型。EVA在很多对话任务上表现优异，尤其是在多轮人机交互对话任务上。</li>
+</ul>
+<p>除了这些模型，我们目前致力于导入更多的预训练语言模型，尤其是大规模预训练语言模型。我们欢迎每一位贡献者通过提交issue来添加他们的模型。</p>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/image-20230611151255525.png" alt="image-20230611151255525"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/image-20230611151343952.png" alt="image-20230611151343952"></p>
+<h1 id="OpenBMB模型微调套件"><a href="#OpenBMB模型微调套件" class="headerlink" title="OpenBMB模型微调套件"></a>OpenBMB模型微调套件</h1><h2 id="OpenPrompt-大模型提示学习利器"><a href="#OpenPrompt-大模型提示学习利器" class="headerlink" title="OpenPrompt-大模型提示学习利器"></a>OpenPrompt-大模型提示学习利器</h2><p>OpenPrompt是一个统一范式的prompt-learning工具包</p>
+<p>OpenPrompt提供<strong>统一接口的提示学习模版语言</strong>， 它的组合性和模块化可以让你轻松部署提示学习方法以驱动大模型。2021年发布以来在GitHub获得<strong>1.3k星标</strong>，每周<strong>访问量10K+</strong>。</p>
+<p>OpenBMB核心模块，用于提示学习微调，获得ACL 2022最佳演示论文奖。</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2111.01998.pdf">OpenPrompt-paper</a>，<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1UG411p7zv?p=42&amp;vd_source=8b2339bb434d07aee12c8e76cc3b9e7b">Prompt-Learning视频</a>，<a target="_blank" rel="noopener" href="https://github.com/thunlp/OpenPrompt">OpenPromp-github</a>和<a target="_blank" rel="noopener" href="https://www.openbmb.org/documentation/openprompt">OpenPrompt Documentation</a></p>
+<h3 id="背景介绍："><a href="#背景介绍：" class="headerlink" title="背景介绍："></a>背景介绍：</h3><h4 id="Prompt-learning范式的崛起"><a href="#Prompt-learning范式的崛起" class="headerlink" title="Prompt-learning范式的崛起"></a>Prompt-learning范式的崛起</h4><p>最近一段时间，一种新的驱动大模型的范式受到了NLP界的广泛关注，它就是提示学习（prompt-learning，又<strong>prompt-tuning</strong>），它将对输入的文本按照模板进行特殊的处理，把任务重构成一个“预训练任务”。比如，在一个情感分类任务中，我们需要判断“这电影让我感觉浪费生命”这句话的情感是“正向”还是“负向”，则可以用模板把分类问题转化为一个“完形填空”问题：“这电影让我感觉浪费生命，它真的很[MASK]”，这里的输出是“棒”和“糟”来对应二分类。研究发现，在训练样本较少时，prompt-learning的表现会异常优异，它能够有效地建立起预训练和模型适配之间的桥梁。<strong>更重要地，它是我们驱动超大模型（如无法直接微调的千亿参数模型）的有效手段。</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/image-20230611153142732.png" alt="image-20230611153142732"></p>
+<h4 id="简单的例子"><a href="#简单的例子" class="headerlink" title="简单的例子"></a>简单的例子</h4><p><img src="https://www.openbmb.org/openbmb/img/demo.f07d483.gif" alt="img"></p>
+<h3 id="OpenPrompt工具包结构图"><a href="#OpenPrompt工具包结构图" class="headerlink" title="OpenPrompt工具包结构图"></a>OpenPrompt工具包结构图</h3><p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/image-20230611153537967.png" alt="工具包结构图"></p>
+<p>事实上，一个<strong>prompt-learning流程是预训练任务、当前任务、人类先验知识、模型架构的综合过程</strong>。</p>
+<p>我们可能在具体实现中遇到各种细节问题，如：</p>
+<ul>
+<li><p>该用什么类型的模型，是MLM还是seq2seq？</p>
+</li>
+<li><p>该用什么参数级别的模型，是亿级、十亿级还是百亿级以上的超大模型？</p>
+</li>
+<li>该使用什么模板？</li>
+<li>是人工构建还是用soft tokens随机初始化？</li>
+<li>该如何构建标签到词表的映射？</li>
+<li>该使用什么训练手段？</li>
+</ul>
+<h3 id="模块语言："><a href="#模块语言：" class="headerlink" title="模块语言："></a>模块语言：</h3><p>OpenPrompt中的模板语言支持自由地组合包括文本模板和软模板的各类字符，并支持字符级别的属性定制。</p>
+<p><img src="https://www.openbmb.org/openbmb/img/image1.82db612.png" alt="img"></p>
+<h3 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h3><ul>
+<li><strong>易用性。</strong>基于OpenPrompt工具包，使用者可以快速根据不同任务部署prompt-learning框架。</li>
+<li><strong>组合性。</strong>从前的prompt-learning研究往往只实验了一种设定，在OpenPrompt的模块化支持下，使用者可以自由地将模型、模板、标词映射进行组合，从而进行更加全面的实验。</li>
+<li><strong>拓展性。</strong>OpenPrompt具有灵活的可拓展性，使用者可以轻松地在其之上完成进阶开发，让你的prompt-learning研究快人一步！</li>
+</ul>
+<h3 id="一些实现的prompt-learning工作"><a href="#一些实现的prompt-learning工作" class="headerlink" title="一些实现的prompt-learning工作"></a>一些实现的prompt-learning工作</h3><p><img src="https://pic3.zhimg.com/80/v2-0ed39575074fe1ae24b911bab3cd004a_720w.webp" alt="img"></p>
+<h2 id="OpenDelta：“小”参数撬动“大”模型"><a href="#OpenDelta：“小”参数撬动“大”模型" class="headerlink" title="OpenDelta：“小”参数撬动“大”模型"></a>OpenDelta：“小”参数撬动“大”模型</h2><p>OpenDelta进行<strong>参数高效的大模型微调</strong>，仅更新极少参数（小于5%）即可达到全参数微调的效果。</p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2203.06904.pdf">OpenDelta-paper</a>，<a target="_blank" rel="noopener" href="https://github.com/thunlp/OpenDelta">OpenDelta:Delta Tuning-github</a>，<a target="_blank" rel="noopener" href="https://www.openbmb.org/community/blogs/blogpage?id=2e947d5b13a6409296d26221e00a97dd">Delta Tuning-blog</a>和<a target="_blank" rel="noopener" href="https://opendelta.readthedocs.io/en/latest/">OpenDelta’s documentation</a></p>
+<h3 id="DeltaTuning-的提出背景"><a href="#DeltaTuning-的提出背景" class="headerlink" title="DeltaTuning 的提出背景"></a>DeltaTuning 的提出背景</h3><p><strong><em>需深入了解deltatuning的原理</em></strong></p>
+<p>2018年预训练语言模型（PLM）横空出世，目前“预训练-微调”方法已成为NLP任务的主流范式。在这个新范式下，我们可以利用大规模无标注数据通过自监督学习预训练语言大模型，得到基础模型，再利用下游任务的有标注数据进行有监督学习微调模型参数，实现下游任务的适配。最近爆火的ChatGPT就是大模型的代表，越来越多的实验和实践表明：规模越大的模型不仅在已知任务上有着更好的表现，同时展现出完成更复杂的未知任务的强大泛化能力。</p>
+<p><img src="https://openbmb.oss-cn-hongkong.aliyuncs.com/openbmb-blog/openbmb/1686123083286-blobid3.png" alt="传统深度学习范式 vs 大模型“预训练-微调”范式"></p>
+<p>然而，更大的模型也在应用上面临着更大的挑战，传统方法对超大规模的预训练模型进行全参数微调的过程会消耗大量的GPU计算资源与存储资源，巨大的成本令人望而却步。论文统计选取了1000篇来自最近五个NLP会议的论文，发现尽管预训练模型已经成为了主流范式，但涉及大模型的论文却寥寥无几。</p>
+<p>为了应对该挑战，<strong>参数高效微调（Parameter-efficient Fine-tuning）</strong>方法逐渐受到关注。与全参数微调相比，参数高效微调方法冻结预训练模型99%以上的参数，仅利用少量下游任务数据微调少于1%模型规模的参数，作为模型插件实现大模型对下游任务的适配，达到媲美全参数微调的性能，并显著降了微调过程的计算和存储开销。</p>
+<h3 id="DeltaTuning-方法与分析"><a href="#DeltaTuning-方法与分析" class="headerlink" title="DeltaTuning:方法与分析"></a>DeltaTuning:方法与分析</h3><p>我们的研究提出，参数高效微调方法的本质是在对“增量参数”（Delta Parameters）进行调整，因此将此类方法命名为“增量微调”（Delta Tuning），其中“delta”是一个经常用于表示变化的数学符号，被借用来指在训练中“改变”的参数部分。研究基于统一的分析框架对增量微调现有方法进行梳理总结，将现有方法分为三类：<strong>添加式（Addition-based）</strong>、<strong>指定式（Specification-based）</strong>和<strong>重参数化（Reparameterization-based）方法</strong>。为了指导后续的模型架构和算法设计，研究还进一步从参数优化和最优控制两个角度，提出了增量微调的理论框架，为探索和解释增量微调的内在机理提供了可行方案。</p>
+<p><img src="https://openbmb.oss-cn-hongkong.aliyuncs.com/openbmb-blog/openbmb/1686123083135-blobid4.png" alt="Delta Tuning 的划分框架"></p>
+<p><strong>Delta</strong> thus means a small fraction $\Delta \Theta$ of parameters besides the pretrained models $\Theta_0$.</p>
+<script type="math/tex; mode=display">
+\Theta \sim \Theta_0(\text { frozen })+\Delta \Theta(\text { tunable })</script><h3 id="DeltaTuning的理论视角"><a href="#DeltaTuning的理论视角" class="headerlink" title="DeltaTuning的理论视角"></a>DeltaTuning的理论视角</h3><p>Delta Tuning本质上是否有共通之处？我们认为，Delta Tuning方法不仅具有很高的实用价值，更具有深远的理论意义，它们似乎都在不约而同地证明一件事情：即大模型的适配过程似乎是一个非常低消耗的过程（相比于预训练），它可以通过非常少的数据和非常少的参数调整来完成。Delta Tuning的成功启发我们去进一步地探索模型适配背后的理论框架，本文提出了优化和最优控制两个视角的框架去对Delta Tuning进行理论层面的阐释。</p>
+<p>从优化角度，我们分析Delta Tuning的效果并讨论了在低维假设下的一些Delta Tuning方法的设计。使用Delta Tuning后，目标函数及其所依赖的参数都可能会发生改变。对新的目标函数，仅优化其与Delta Tuning有关的参数，如果初值足够好，在一定假设意义下模型的性能不会有大的损害。但是为了确保Delta Tuning的有效性，有必要去开发问题的结构来设计这个新的目标函数。其出发点是利用问题内在的低维特性。一般而言，在实践中有两种思路被证明是有用的：<strong>一，在特定的低维的子空间内寻找解向量；二，在特定的低维的函数空间内近似目标函数</strong>。从最优控制角度，基于以往的从最优控制角度解释深度学习的理论，我们揭示了Delta Tuning可以看作寻找最优控制器的过程。</p>
+<p>我们的分析可以启发新颖的Delta Tuning方法的设计，我们还证明了Delta参数 对 PLM 的干预等同于控制器的设计。通过应用控制器设计 的理论，我们期望提出更多具有理论保证的 Delta Tuning 方法，即设计的 delta 结构在充分激发PLM的情况下具有原则上的可解释性。</p>
+<h3 id="DeltaTuning：全方位实验"><a href="#DeltaTuning：全方位实验" class="headerlink" title="DeltaTuning：全方位实验"></a>DeltaTuning：全方位实验</h3><p>我们选择了超过100个自然语言处理任务，对主流增量微调方法进行了全面细致的性能比较和分析，得出多项重要结论，例如：</p>
+<ol>
+<li>基础模型随着参数规模的不断增大，在性能显著提高的同时，不同增量微调方法的差异急剧减少，最少仅需要优化万分之八的模型参数即可完成适配；</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/1686123083178-blobid5.png" alt="随着基础模型参数规模的增大，增量微调方法可以更有效地激发模型性能"></p>
+<ol>
+<li><p>不同增量微调方法可以进行并行或者串行的组合从而达到更优的性能，表明了分布在模型参数空间中的智能能力可以进行组合和泛化；</p>
+</li>
+<li><p>增量微调方法具备良好的任务级别的迁移能力，完成特定任务的“能力”可以表示为轻量级参数化的形式，可以在不同基础模型和不同用户之间共享。</p>
+<p>以上研究表明，增量微调是基础模型的重要特性，上述结论将加深对基础模型的认识，为其创新研究与应用提供重要支撑。</p>
+</li>
+</ol>
+<h3 id="DeltaTuning的应用"><a href="#DeltaTuning的应用" class="headerlink" title="DeltaTuning的应用"></a>DeltaTuning的应用</h3><p><strong>快速训练与存储空间节省。</strong>Transformer 模型虽然本质上是可并行化的，但由于其庞大的规模，训练起来非常缓慢。尽管 Delta Tuning 的收敛速度可能比传统的全参数微调慢，但随着反向传播期间可微调参数的计算量显著减少，Delta Tuning 的训练速度也得到了显著提升。前人工作已经验证了，使用 Adapter 进行下游调优可以将训练时间减少到 40%，同时保持与全参数微调相当的性能。由于轻量的特性，训练得到的 Delta 参数还可以节省存储空间，从而方便在从业者之间共享，促进知识迁移。</p>
+<p><strong>多任务学习。</strong>构建通用的人工智能系统一直是研究人员的目标。最近，超大型 PLM （例如 GPT-3） 已经展示了同时拟合不同数据分布和促进各种任务的下游性能的惊人能力。因此，在大规模预训练时代，多任务学习受到越来越多的关注。作为全参数微调方法的有效替代，Delta Tuning 具有出色的多任务学习能力，同时保持相对较低的额外存储。成功的应用包括多语言学习、阅读理解等。此外，Delta Tuning也有望作为持续学习中灾难性遗忘的潜在解决方案。</p>
+<p><strong>中心化模型服务和并行计算。</strong>超大型 PLM 通常作为服务发布，即用户通过与模型提供者公布的 API 交互来使用大模型，而不是本地存储大模型。考虑到用户和服务提供商之间难以承受的通信成本，由于其轻量级的特性，Delta Tuning 显然是比传统全参数微调更具竞争力的选择。一方面，服务提供商可以支持训练多个用户所需的下游任务，同时消耗更少的计算和存储空间。此外，考虑到一些 Delta Tuning 算法本质上是可并行的（例如 Prompt Tuning 和 Prefix-Tuning等），因此 Delta Tuning 可以允许在同一个 batch 中并行训练/测试来自多个用户的样本（In-batch Parallel Computing）。最近的工作还表明，大多数 Delta Tuning 方法，如果本质上不能并行化，也可以通过一些方法修改以支持并行计算。另一方面，当中心的达模型的梯度对用户不可用时，Delta Tuning 仍然能够通过无梯度的黑盒算法，仅调用模型推理 API 来优化大型 PLM。</p>
+<h3 id="为什么选择OpenDelta？"><a href="#为什么选择OpenDelta？" class="headerlink" title="为什么选择OpenDelta？"></a>为什么选择OpenDelta？</h3><ul>
+<li><p><strong>Clean:</strong> No need to edit the backbone PTM’s codes.</p>
+</li>
+<li><p><strong>Simple:</strong> Migrating from full-model tuning to delta-tuning needs as little as 3 lines of codes.</p>
+</li>
+<li><p><strong>Sustainable:</strong> Most evolution in external library doesn’t require a new OpenDelta.</p>
+</li>
+<li><p><strong>Extendable:</strong> Various PTMs can share the same delta-tuning codes.</p>
+</li>
+<li><p><strong>Flexible:</strong> Able to apply delta-tuning to (almost) any position of the PTMs.</p>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/delta_easy.8417e73.png" alt="几行代码便可以部署参数高效的delta tuning框架"></p>
+</li>
+</ul>
+<h4 id="可视化操作"><a href="#可视化操作" class="headerlink" title="可视化操作"></a>可视化操作</h4><p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/image-20230611154807902.png" alt="image-20230611154807902"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/delta_visual.c172796.png" alt="OpenDelta集成的可视化模块可以轻松地在模型内部进行操作"></p>
+<p>具体方法：</p>
+<ol>
+<li><p>相同结构的图层被折叠（红色）</p>
+</li>
+<li><p>所有参数信息都保存，蓝色的可以调的，灰色是冻结的</p>
+</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/image-20230611220955205.png" alt="image-20230611220955205"></p>
+<ol>
+<li><p>在任意层中插入增量模块。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delta model = LoraModel(backbone_model<span class="punctuation">,</span> rank=<span class="number">8</span><span class="punctuation">,</span>modified keys=<span class="punctuation">[</span><span class="string">&quot;20.attention.output.dense&quot;</span><span class="punctuation">,</span> <span class="string">&quot;23.attention.self.value&quot;</span><span class="punctuation">]</span>)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/image-20230611221157332.png" alt="image-20230611221157332"></p>
+<h3 id="OpenDelta模型支持"><a href="#OpenDelta模型支持" class="headerlink" title="OpenDelta模型支持"></a>OpenDelta模型支持</h3><p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/delta_support.fde9d74.png" alt="OpenDelta可以兼容目前的主流语言模型，甚至视觉Transformer (ViT)。"></p>
+<h1 id="OpenBMB模型仓库"><a href="#OpenBMB模型仓库" class="headerlink" title="OpenBMB模型仓库"></a>OpenBMB模型仓库</h1><h2 id="ModelCenter"><a href="#ModelCenter" class="headerlink" title="ModelCenter"></a>ModelCenter</h2><p><strong>大模型仓库。</strong>ModelCenter基于BMTrain工具实现了一系列预训练语言模型，支持<strong>高效、低成本、可扩展性强的模型微调及分布式训练</strong>。</p>
+<p>ModelCenter 实现了基于 <a target="_blank" rel="noopener" href="https://bmtrain.readthedocs.io/en/latest/index.html">BMTrain</a> 后端的 PLM（预训练语言模型）</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/OpenBMB/ModelCenter">ModelCenter-github</a>，<a target="_blank" rel="noopener" href="https://modelcenter.readthedocs.io/en/latest/">ModelCenter’s Documentation</a></p>
+<h3 id="优点：-1"><a href="#优点：-1" class="headerlink" title="优点："></a>优点：</h3><ul>
+<li>更高效的显存利用：我们的实现可以将显存占用降低数倍，进而使用更大的 batch-size 对 GPU 的计算能力进行更充分的利用。</li>
+<li>易于使用：相比 Deepspeed, Megatron, ModelCenter拥有更好更灵活的封装，且配置 Python 环境简单, 训练代码与 PyTorch 风格统一。</li>
+<li>以低资源实现高效的分布式训练：在 <a target="_blank" rel="noopener" href="https://github.com/OpenBMB/BMTrain/">OpenBMB/BMTrain</a> 的支持下，我们能够轻松地将 <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/abstract/document/9355301">ZeRO</a> 优化扩展到任何 PLM，并优化通信和时间调度，以实现更快的分布式培训。</li>
+<li>性能强大：与流行框架对比，搭配BMTrain的模型表现惊人。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/easy_use.b54818b.png" alt="img"></p>
+<h3 id="支持模型："><a href="#支持模型：" class="headerlink" title="支持模型："></a>支持模型：</h3><p>CPM-1[<a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/pii/S266665102100019X">paper</a>]</p>
+<p>CPM-2[<a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/pii/S2666651021000310">paper</a>]</p>
+<p>BERT[<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1810.04805">paper</a>]</p>
+<blockquote>
+<ul>
+<li>bert-base-cased</li>
+<li>bert-base-uncased</li>
+<li>bert-large-cased</li>
+<li>bert-large-uncased</li>
+<li>bert-base-chinese</li>
+<li>bert-base-multilingual-cased</li>
+<li>kv-plm</li>
+</ul>
+</blockquote>
+<p>RoBERTa[<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1907.11692">paper</a>]</p>
+<blockquote>
+<ul>
+<li>roberta-base</li>
+<li>roberta-large</li>
+</ul>
+</blockquote>
+<p>T5[<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1910.10683">paper</a>]</p>
+<blockquote>
+<ul>
+<li>t5-small</li>
+<li>t5-base</li>
+<li>t5-large</li>
+<li>t5-3b</li>
+<li>t5-11b</li>
+<li>t5-v1_1-small</li>
+<li>t5-v1_1-base</li>
+<li>t5-v1_1-large</li>
+<li>t5-v1_1-xl</li>
+<li>t5-v1_1-xxl</li>
+<li>mt5-small</li>
+<li>mt5-base</li>
+<li>mt5-large</li>
+<li>mt5-xl</li>
+<li>mt5-xxl</li>
+<li>mengzi-t5-base</li>
+<li>flan-t5-small</li>
+<li>flan-t5-base</li>
+<li>flan-t5-large</li>
+<li>flan-t5-xl</li>
+<li>flan-t5-xxl</li>
+</ul>
+</blockquote>
+<p>GPT-2[<a target="_blank" rel="noopener" href="http://www.persagen.com/files/misc/radford2019language.pdf">paper</a>]</p>
+<blockquote>
+<ul>
+<li>gpt2-base</li>
+<li>gpt2-medium</li>
+<li>gpt2-large</li>
+<li>gpt2-xl</li>
+<li>wenzhong-gpt2-3.5b</li>
+</ul>
+</blockquote>
+<p>GPT-J[<a target="_blank" rel="noopener" href="https://github.com/kingoflolz/mesh-transformer-jax">paper</a>]</p>
+<blockquote>
+<ul>
+<li>gptj-6b</li>
+</ul>
+</blockquote>
+<p>Longformer[<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2004.05150">paper</a>]</p>
+<p>GLM[<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2103.10360">paper</a>]</p>
+<blockquote>
+<ul>
+<li>glm-10b-zh</li>
+</ul>
+</blockquote>
+<p>ViT[<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2010.11929">paper</a>]</p>
+<p>LLaMA[<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2302.13971">paper</a>]</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://tobi0520.github.io/">yangzhi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://tobi0520.github.io/">https://tobi0520.github.io/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">此文章版权归yangzhi所有，如有转载，请注明來自原作者</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/NLP/">NLP</a></div><div class="post_share"><div class="social-share" data-image="https://www.openbmb.org/openbmb/img/bmb_system.c1600ab.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://lib.baomitu.com/social-share.js/1.0.16/css/share.min.css" media="print" onload="this.media='all'"><script src="https://lib.baomitu.com/social-share.js/1.0.16/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/06/13/d2l/preliminary/" title="动手深度学习(一)-预备知识"><img class="cover" src="https://zh.d2l.ai/_images/front.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">动手深度学习(一)-预备知识</div></div></a></div><div class="next-post pull-right"><a href="/2023/05/17/latex/SymbolTables/" title="Latex符号自查"><img class="cover" src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/20230517202918.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Latex符号自查</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/07/04/NLP/chatglm6b_tuning/" title="ChatGLM-6B微调"><img class="cover" src="https://zhipuaiadmin.aminer.cn/upload/29965d686cc402633f4a4df5de8cc182.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-04</div><div class="title">ChatGLM-6B微调</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://dogefs.s3.ladydaily.com/~/source/wallhaven/full/o5/wallhaven-o5yqr5.jpg?w=2560&amp;h=1440&amp;fmt=webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Yang Zhi</div><div class="author-info__description">记录学习路上踩过的坑</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">7</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tobi0520"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/tobi0520" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:yangzhi5677@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">学习维护个人网站中。。。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#OPenBMB%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">OPenBMB介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenBMB%E8%83%BD%E5%8A%9B%E4%BD%93%E7%B3%BB"><span class="toc-number">1.1.</span> <span class="toc-text">OpenBMB能力体系</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OpenBMB%E5%B7%A5%E5%85%B7"><span class="toc-number">2.</span> <span class="toc-text">OpenBMB工具</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OpenBMB%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E5%A5%97%E4%BB%B6"><span class="toc-number">3.</span> <span class="toc-text">OpenBMB模型训练套件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#BMData%EF%BC%9A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E2%80%9C%E5%8E%9F%E6%96%99%E2%80%9D%E6%94%B6%E9%9B%86%E5%99%A8"><span class="toc-number">3.1.</span> <span class="toc-text">BMData：大模型“原料”收集器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BMTrain%EF%BC%9A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E2%80%9C%E5%8F%91%E5%8A%A8%E6%9C%BA%E2%80%9D"><span class="toc-number">3.2.</span> <span class="toc-text">BMTrain：大模型训练“发动机”</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81BMTrain%EF%BC%9F"><span class="toc-number">3.2.1.</span> <span class="toc-text">为什么需要BMTrain？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%97%E5%8A%9B%E6%88%90%E6%9C%AC%E9%AB%98"><span class="toc-number">3.2.1.1.</span> <span class="toc-text">算力成本高</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E7%A8%8B%E9%9A%BE%E5%BA%A6%E5%A4%A7"><span class="toc-number">3.2.1.2.</span> <span class="toc-text">编程难度大</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E9%80%9F%E5%BA%A6%E4%BD%8E"><span class="toc-number">3.2.1.3.</span> <span class="toc-text">计算速度低</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BMTrian%E7%9A%84%E7%9B%AE%E7%9A%84%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">3.2.2.</span> <span class="toc-text">BMTrian的目的是什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AB%98%E6%95%88%E7%8E%87"><span class="toc-number">3.2.2.1.</span> <span class="toc-text">高效率</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%8E%E8%B5%84%E6%BA%90"><span class="toc-number">3.2.2.2.</span> <span class="toc-text">低资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%AF%E6%89%A9%E5%B1%95"><span class="toc-number">3.2.2.3.</span> <span class="toc-text">可扩展</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%8E%BB%E5%AE%9E%E7%8E%B0%EF%BC%9F"><span class="toc-number">3.2.3.</span> <span class="toc-text">如何去实现？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF"><span class="toc-number">3.2.3.1.</span> <span class="toc-text">核心技术</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BMCook%EF%BC%9A%E5%A4%A7%E6%A8%A1%E5%9E%8B%E2%80%9C%E7%98%A6%E8%BA%AB%E2%80%9D%E5%B7%A5%E5%85%B7%E5%BA%93"><span class="toc-number">3.3.</span> <span class="toc-text">BMCook：大模型“瘦身”工具库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81BMCook%EF%BC%9F"><span class="toc-number">3.3.1.</span> <span class="toc-text">为什么需要BMCook？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PLM%E8%A7%84%E6%A8%A1%E7%88%86%E7%82%B8%E5%A2%9E%E9%95%BF"><span class="toc-number">3.3.1.1.</span> <span class="toc-text">PLM规模爆炸增长</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%A8%E5%A4%A7%E7%9A%84%E8%AE%A1%E7%AE%97%E6%88%90%E6%9C%AC"><span class="toc-number">3.3.1.2.</span> <span class="toc-text">巨大的计算成本</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87"><span class="toc-number">3.3.2.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%B0%E5%AD%98%E6%96%B9%E6%B3%95"><span class="toc-number">3.3.3.</span> <span class="toc-text">现存方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Model-Pruning-2015%EF%BC%9A%E5%89%AA%E6%9E%9D50-%E5%8F%82%E6%95%B0%EF%BC%8C%E5%8F%AF%E5%8A%A0%E9%80%9F1%E5%80%8D"><span class="toc-number">3.3.3.1.</span> <span class="toc-text">Model Pruning-2015：剪枝50%参数，可加速1倍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Model-Quantization-2021%EF%BC%9A%E6%8F%90%E5%8D%874%E5%80%8D%E8%BF%90%E7%AE%97%E9%80%9F%E5%BA%A6-%EF%BC%8C%E4%BD%BF%E7%94%A81-4%E5%AD%98%E5%82%A8%E7%A9%BA%E9%97%B4"><span class="toc-number">3.3.3.2.</span> <span class="toc-text">Model Quantization-2021：提升4倍运算速度 ，使用1&#x2F;4存储空间</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Model-MoEfication-2022%EF%BC%9A%E5%87%8F%E5%B0%9180-%E7%BA%BF%E6%80%A7%E5%B1%82%E5%8F%82%E6%95%B0%EF%BC%8C%E5%8F%AF%E5%8A%A0%E9%80%9F1%E5%80%8D"><span class="toc-number">3.3.3.3.</span> <span class="toc-text">Model MoEfication-2022：减少80%线性层参数，可加速1倍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Knowledge-Distillation-2021%EF%BC%9A%E4%B8%BA%E4%BB%A5%E4%B8%8A%E6%A8%A1%E5%9D%97%E6%8F%90%E4%BE%9B%E6%9B%B4%E4%BC%98%E7%9B%91%E7%9D%A3%E5%9E%8B%E5%8F%B7"><span class="toc-number">3.3.3.4.</span> <span class="toc-text">Knowledge Distillation-2021：为以上模块提供更优监督型号</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-number">3.3.4.</span> <span class="toc-text">优点</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OpenBMB%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E5%A5%97%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">OpenBMB模型推理套件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#BMinf-%E5%8D%83%E5%85%83%E7%BA%A7%E6%98%BE%E5%8D%A1%E7%8E%A9%E8%BD%AC%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86"><span class="toc-number">4.1.</span> <span class="toc-text">BMinf-千元级显卡玩转大模型推理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">4.1.1.</span> <span class="toc-text">背景</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E7%82%B9%EF%BC%9A"><span class="toc-number">4.1.1.1.</span> <span class="toc-text">优点：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%83%8C%E5%90%8E%E6%8A%80%E6%9C%AF%EF%BC%9A"><span class="toc-number">4.1.1.2.</span> <span class="toc-text">背后技术：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95"><span class="toc-number">4.1.1.3.</span> <span class="toc-text">性能测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%94%AF%E6%8C%81%E6%A8%A1%E5%9E%8B"><span class="toc-number">4.1.1.4.</span> <span class="toc-text">支持模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B"><span class="toc-number">4.1.1.5.</span> <span class="toc-text">实例</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OpenBMB%E6%A8%A1%E5%9E%8B%E5%BE%AE%E8%B0%83%E5%A5%97%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">OpenBMB模型微调套件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenPrompt-%E5%A4%A7%E6%A8%A1%E5%9E%8B%E6%8F%90%E7%A4%BA%E5%AD%A6%E4%B9%A0%E5%88%A9%E5%99%A8"><span class="toc-number">5.1.</span> <span class="toc-text">OpenPrompt-大模型提示学习利器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D%EF%BC%9A"><span class="toc-number">5.1.1.</span> <span class="toc-text">背景介绍：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Prompt-learning%E8%8C%83%E5%BC%8F%E7%9A%84%E5%B4%9B%E8%B5%B7"><span class="toc-number">5.1.1.1.</span> <span class="toc-text">Prompt-learning范式的崛起</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="toc-number">5.1.1.2.</span> <span class="toc-text">简单的例子</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OpenPrompt%E5%B7%A5%E5%85%B7%E5%8C%85%E7%BB%93%E6%9E%84%E5%9B%BE"><span class="toc-number">5.1.2.</span> <span class="toc-text">OpenPrompt工具包结构图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E8%AF%AD%E8%A8%80%EF%BC%9A"><span class="toc-number">5.1.3.</span> <span class="toc-text">模块语言：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%82%B9-1"><span class="toc-number">5.1.4.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%AE%9E%E7%8E%B0%E7%9A%84prompt-learning%E5%B7%A5%E4%BD%9C"><span class="toc-number">5.1.5.</span> <span class="toc-text">一些实现的prompt-learning工作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#OpenDelta%EF%BC%9A%E2%80%9C%E5%B0%8F%E2%80%9D%E5%8F%82%E6%95%B0%E6%92%AC%E5%8A%A8%E2%80%9C%E5%A4%A7%E2%80%9D%E6%A8%A1%E5%9E%8B"><span class="toc-number">5.2.</span> <span class="toc-text">OpenDelta：“小”参数撬动“大”模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DeltaTuning-%E7%9A%84%E6%8F%90%E5%87%BA%E8%83%8C%E6%99%AF"><span class="toc-number">5.2.1.</span> <span class="toc-text">DeltaTuning 的提出背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DeltaTuning-%E6%96%B9%E6%B3%95%E4%B8%8E%E5%88%86%E6%9E%90"><span class="toc-number">5.2.2.</span> <span class="toc-text">DeltaTuning:方法与分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DeltaTuning%E7%9A%84%E7%90%86%E8%AE%BA%E8%A7%86%E8%A7%92"><span class="toc-number">5.2.3.</span> <span class="toc-text">DeltaTuning的理论视角</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DeltaTuning%EF%BC%9A%E5%85%A8%E6%96%B9%E4%BD%8D%E5%AE%9E%E9%AA%8C"><span class="toc-number">5.2.4.</span> <span class="toc-text">DeltaTuning：全方位实验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DeltaTuning%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">5.2.5.</span> <span class="toc-text">DeltaTuning的应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9OpenDelta%EF%BC%9F"><span class="toc-number">5.2.6.</span> <span class="toc-text">为什么选择OpenDelta？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96%E6%93%8D%E4%BD%9C"><span class="toc-number">5.2.6.1.</span> <span class="toc-text">可视化操作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#OpenDelta%E6%A8%A1%E5%9E%8B%E6%94%AF%E6%8C%81"><span class="toc-number">5.2.7.</span> <span class="toc-text">OpenDelta模型支持</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#OpenBMB%E6%A8%A1%E5%9E%8B%E4%BB%93%E5%BA%93"><span class="toc-number">6.</span> <span class="toc-text">OpenBMB模型仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#ModelCenter"><span class="toc-number">6.1.</span> <span class="toc-text">ModelCenter</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%82%B9%EF%BC%9A-1"><span class="toc-number">6.1.1.</span> <span class="toc-text">优点：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%AF%E6%8C%81%E6%A8%A1%E5%9E%8B%EF%BC%9A"><span class="toc-number">6.1.2.</span> <span class="toc-text">支持模型：</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/07/04/NLP/chatglm6b_tuning/" title="ChatGLM-6B微调"><img src="https://zhipuaiadmin.aminer.cn/upload/29965d686cc402633f4a4df5de8cc182.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ChatGLM-6B微调"/></a><div class="content"><a class="title" href="/2023/07/04/NLP/chatglm6b_tuning/" title="ChatGLM-6B微调">ChatGLM-6B微调</a><time datetime="2023-07-04T00:00:00.000Z" title="发表于 2023-07-04 08:00:00">2023-07-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/07/03/note/chatgpt_account/" title="chatgpt注册"><img src="https://www.freedidi.com/wp-content/uploads/2023/05/4d76c01a295cc5cda2029d9147b59aef.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="chatgpt注册"/></a><div class="content"><a class="title" href="/2023/07/03/note/chatgpt_account/" title="chatgpt注册">chatgpt注册</a><time datetime="2023-07-03T05:50:20.207Z" title="发表于 2023-07-03 13:50:20">2023-07-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/13/d2l/preliminary/" title="动手深度学习(一)-预备知识"><img src="https://zh.d2l.ai/_images/front.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="动手深度学习(一)-预备知识"/></a><div class="content"><a class="title" href="/2023/06/13/d2l/preliminary/" title="动手深度学习(一)-预备知识">动手深度学习(一)-预备知识</a><time datetime="2023-06-13T00:00:00.000Z" title="发表于 2023-06-13 08:00:00">2023-06-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/11/NLP/openbmb_intro/" title="OpenBMB介绍"><img src="https://www.openbmb.org/openbmb/img/bmb_system.c1600ab.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="OpenBMB介绍"/></a><div class="content"><a class="title" href="/2023/06/11/NLP/openbmb_intro/" title="OpenBMB介绍">OpenBMB介绍</a><time datetime="2023-06-11T00:00:00.000Z" title="发表于 2023-06-11 08:00:00">2023-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/05/17/latex/SymbolTables/" title="Latex符号自查"><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/20230517202918.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Latex符号自查"/></a><div class="content"><a class="title" href="/2023/05/17/latex/SymbolTables/" title="Latex符号自查">Latex符号自查</a><time datetime="2023-05-17T00:00:00.000Z" title="发表于 2023-05-17 08:00:00">2023-05-17</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://www.openbmb.org/openbmb/img/bmb_system.c1600ab.webp')"><div id="footer-wrap"><div class="copyright">&copy;2023 By Yang Zhi</div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener" href="https://butterfly.js.org/">blog</a>!😬😬😬</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.17/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdnjs.cloudflare.com/ajax/libs/butterfly-extsrc/1.1.3/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script async src="//at.alicdn.com/t/font_2032782_8d5kxvn09md.js"></script><!-- hexo injector body_end end --></body></html>
