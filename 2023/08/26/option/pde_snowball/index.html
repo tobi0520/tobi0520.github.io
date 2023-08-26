@@ -1,0 +1,773 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>雪球期权——PDE定价方法详解 | 大智若愚</title><meta name="author" content="Yang Zhi"><meta name="copyright" content="Yang Zhi"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="雪球期权定价">
+<meta property="og:type" content="article">
+<meta property="og:title" content="雪球期权——PDE定价方法详解">
+<meta property="og:url" content="https://tobi0520.github.io/2023/08/26/option/pde_snowball/index.html">
+<meta property="og:site_name" content="大智若愚">
+<meta property="og:description" content="雪球期权定价">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xqimg.imedao.com/1699a27b966338203fe6834e.png!800.jpg">
+<meta property="article:published_time" content="2023-08-26T00:00:00.000Z">
+<meta property="article:modified_time" content="2023-08-26T14:44:00.060Z">
+<meta property="article:author" content="Yang Zhi">
+<meta property="article:tag" content="期权">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xqimg.imedao.com/1699a27b966338203fe6834e.png!800.jpg"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/20230514173724.png"><link rel="canonical" href="https://tobi0520.github.io/2023/08/26/option/pde_snowball/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.17/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Yang Zhi","link":"链接: ","source":"来源: 大智若愚","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdnjs.cloudflare.com/ajax/libs/flickr-justified-gallery/2.1.2/fjGallery.min.js',
+      css: 'https://cdnjs.cloudflare.com/ajax/libs/flickr-justified-gallery/2.1.2/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: true,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '雪球期权——PDE定价方法详解',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-08-26 22:44:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/font-awesome-animation.min.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/tag_plugins.css" media="defer" onload="this.media='all'"><script src="https://npm.elemecdn.com/hexo-butterfly-tag-plugins-plus@latest/lib/assets/carousel-touch.js"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+document.addEventListener('pjax:send', () => {
+  Pace.restart()
+})
+</script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.min.css"/><script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js"></script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://dogefs.s3.ladydaily.com/~/source/wallhaven/full/o5/wallhaven-o5yqr5.jpg?w=2560&amp;h=1440&amp;fmt=webp" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-house"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-clock"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-book"></i><span> 资料</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-comments"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-address-card"></i><span> 关于我</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://xqimg.imedao.com/1699a27b966338203fe6834e.png!800.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="大智若愚"><img class="site-icon" src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/20230514173724.png"/><span class="site-name">大智若愚</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-house"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-compass"></i><span> 目录</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/archives/"><i class="fa-fw fa fa-clock"></i><span> 时间轴</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-book"></i><span> 资料</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> 电影</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-comments"></i><span> 其他</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友情链接</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fa fa-address-card"></i><span> 关于我</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">雪球期权——PDE定价方法详解</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-08-26T00:00:00.000Z" title="发表于 2023-08-26 08:00:00">2023-08-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-08-26T14:44:00.060Z" title="更新于 2023-08-26 22:44:00">2023-08-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%87%91%E8%9E%8D/">金融</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">8.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>41分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="雪球期权——PDE定价方法详解"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="偏微分方程有限差分定价"><a href="#偏微分方程有限差分定价" class="headerlink" title="偏微分方程有限差分定价"></a>偏微分方程有限差分定价</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> scipy.interpolate <span class="keyword">as</span> spi</span><br><span class="line"><span class="keyword">import</span> scipy.sparse <span class="keyword">as</span> sp</span><br><span class="line"><span class="keyword">import</span> scipy.linalg <span class="keyword">as</span> sla</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> dataclasses <span class="keyword">import</span> dataclass</span><br><span class="line"><span class="keyword">import</span> matplotlib <span class="keyword">as</span> mpl</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> matplotlib.ticker <span class="keyword">as</span> ticker</span><br><span class="line"><span class="keyword">import</span> plotly.graph_objects <span class="keyword">as</span> go</span><br><span class="line">%matplotlib inline</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> cufflinks <span class="keyword">as</span> cf</span><br><span class="line">cf.go_offline()</span><br></pre></td></tr></table></figure>
+<script type="text/javascript">
+window.PlotlyConfig = {MathJaxConfig: 'local'};
+if (window.MathJax) {MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+if (typeof require !== 'undefined') {
+require.undef("plotly");
+requirejs.config({
+    paths: {
+        'plotly': ['https://cdn.plot.ly/plotly-2.4.2.min']
+    }
+});
+require(['plotly'], function(Plotly) {
+    window._Plotly = Plotly;
+});
+}
+</script>
+
+
+
+<h2 id="1-雪球自动敲出-Snowball-AutoCallable-产品"><a href="#1-雪球自动敲出-Snowball-AutoCallable-产品" class="headerlink" title="1.雪球自动敲出 (Snowball AutoCallable) 产品"></a>1.雪球自动敲出 (Snowball AutoCallable) 产品</h2><h3 id="1-1-交易实证"><a href="#1-1-交易实证" class="headerlink" title="1.1 交易实证"></a>1.1 交易实证</h3><p>如果长期对某个标的看好，但短期又怕市场变化，可以用雪球结构锁定短期波动。以下标的为中证 500 指数的一个真实雪球结构产品的交易证实 (term sheet) 如下：</p>
+<hr>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th><strong>产品要素</strong></th>
+<th><strong>要素性质（示例）</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>标的资产</td>
+<td>中证 500 指数（000905.SH）</td>
+</tr>
+<tr>
+<td>观察期限</td>
+<td>360 天，从第三个月开始每月观察敲出+每日观察敲入</td>
+</tr>
+<tr>
+<td>期权结构</td>
+<td>自动敲入敲出结构</td>
+</tr>
+<tr>
+<td>名义本金</td>
+<td>100 万</td>
+</tr>
+<tr>
+<td>敲出水平</td>
+<td>期初价格*103%</td>
+</tr>
+<tr>
+<td>敲入水平</td>
+<td>期初价格*80%</td>
+</tr>
+<tr>
+<td>敲出票息(同红利票息)</td>
+<td>25%（年化）</td>
+</tr>
+<tr>
+<td>敲出事件（每月观察）</td>
+<td>若在任一敲出观察日，挂钩标的收盘价格大于等于敲出水平</td>
+</tr>
+<tr>
+<td>敲入事件（每日观察）</td>
+<td>若在任一敲入观察日，挂钩标的收盘价格小于敲入水平</td>
+</tr>
+<tr>
+<td>收益计算（不包括本金）</td>
+<td>敲出（自动提前终止）：25% <em>名义本金 </em>计息天数/365</td>
+</tr>
+<tr>
+<td></td>
+<td>未敲入未敲出：25% 名义本金计息天数/365（在此计息天数为 360 天）</td>
+</tr>
+<tr>
+<td></td>
+<td>敲入且未敲出（标的期末价格小于期初价格）：(期末价格/期初价格－1) *本金</td>
+</tr>
+<tr>
+<td></td>
+<td>敲入且未敲出（标的期末价格处于期初价格与敲出价格之间）：0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>数学符号</th>
+<th>参数名称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>本金</td>
+<td>Principal</td>
+<td><code>Principal</code></td>
+</tr>
+<tr>
+<td>观察期年限</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr>
+<td>期初价格</td>
+<td>$S_0$</td>
+<td><code>S</code></td>
+</tr>
+<tr>
+<td>敲入水平</td>
+<td>$K_{in}$</td>
+<td><code>KI_Barrier</code></td>
+</tr>
+<tr>
+<td>敲出水平</td>
+<td>$K_{out}$</td>
+<td><code>KO_Barrier</code></td>
+</tr>
+<tr>
+<td>敲入价</td>
+<td>$K_{in}$</td>
+<td><code>KI_price</code></td>
+</tr>
+<tr>
+<td>敲出价</td>
+<td>$K_{out}$</td>
+<td><code>KO_price</code></td>
+</tr>
+<tr>
+<td>敲出票息</td>
+<td>$c_1$</td>
+<td><code>KO_Coupon</code></td>
+</tr>
+<tr>
+<td>红利票息</td>
+<td>$c_2$</td>
+<td><code>Bonus_Coupon</code></td>
+</tr>
+<tr>
+<td>无风险收益率</td>
+<td>$r$</td>
+<td><code>r</code></td>
+</tr>
+<tr>
+<td>分红</td>
+<td>$q$</td>
+<td><code>div</code></td>
+</tr>
+<tr>
+<td>波动率</td>
+<td>$\sigma$</td>
+<td><code>sigma</code></td>
+</tr>
+<tr>
+<td>敲出日</td>
+<td>${t_i}$</td>
+<td><code>T_KO</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>下节分析了雪球结构五种情景收益情况，只有一种情况会亏损，一种会保本，其他三种会获利。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@dataclass</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Snowball_Parameters</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;parameters to used for pricing snowball option using PDE&quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    Principal: <span class="built_in">float</span> = <span class="number">10</span>**<span class="number">6</span>                     <span class="comment"># principal</span></span><br><span class="line">    T: <span class="built_in">int</span> = <span class="number">1</span>                              <span class="comment"># time to maturity in years</span></span><br><span class="line">    S: <span class="built_in">float</span> = <span class="number">6500</span>                              <span class="comment"># underlying spot</span></span><br><span class="line">    St: <span class="built_in">float</span> = <span class="number">6500</span></span><br><span class="line">    KI_Barrier: <span class="built_in">float</span> = <span class="number">0.8</span>                  <span class="comment"># down in barrier of put</span></span><br><span class="line">    KO_Barrier: <span class="built_in">float</span> = <span class="number">1.03</span>                     <span class="comment"># autocall barrier </span></span><br><span class="line">    KO_Coupon: <span class="built_in">float</span> = <span class="number">0.25</span>                   <span class="comment"># autocall coupon (p.a.)</span></span><br><span class="line">    Bonus_Coupon: <span class="built_in">float</span> = <span class="number">0.25</span>                <span class="comment"># bonus coupon (p.a.)</span></span><br><span class="line">    r: <span class="built_in">float</span> = <span class="number">0.03</span>                           <span class="comment"># risk-free interest rate</span></span><br><span class="line">    div: <span class="built_in">float</span> = <span class="number">0</span>                         <span class="comment"># dividend rate</span></span><br><span class="line">    sigma: <span class="built_in">float</span> = <span class="number">0.2455</span>                           <span class="comment"># volatility    </span></span><br><span class="line">    Ns: <span class="built_in">int</span> = <span class="number">500</span>                              <span class="comment"># number of steps of uly in the scheme</span></span><br><span class="line">    Nt: <span class="built_in">int</span> = <span class="number">365</span>                            <span class="comment"># number of discrete time points for whole tenor</span></span><br><span class="line">    T_KO: np.ndarray = np.arange(<span class="number">30</span>*<span class="number">3</span>/<span class="number">365</span>,<span class="number">30</span>*<span class="number">12.1</span>/<span class="number">365</span>,<span class="number">30</span>/<span class="number">365</span>) <span class="comment"># time of knock_out</span></span><br><span class="line"></span><br><span class="line">    </span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">KI_price</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.S * self.KI_Barrier</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">KO_price</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.S * self.KO_Barrier</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">dt</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.T / self.Nt</span><br><span class="line">    </span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">Tvec</span>(<span class="params">self</span>):                 <span class="comment"># time axis of grid</span></span><br><span class="line">        <span class="keyword">return</span> np.linspace(<span class="number">0</span>, self.T, self.Nt+<span class="number">1</span>) </span><br><span class="line">    </span><br><span class="line"><span class="meta">    @property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">tau</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.Tvec[-<span class="number">1</span>]-self.Tvec</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">print_parameters</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="string">&quot;&quot;&quot;print parameters&quot;&quot;&quot;</span></span><br><span class="line">        </span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;---------------------------------------------&quot;</span> )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Pricing a Snowball option using PDE&quot;</span> )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;---------------------------------------------&quot;</span> )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Parameters of Snowball Option Pricer:&quot;</span> )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;---------------------------------------------&quot;</span> )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Years Until Expiration = &quot;</span>,     self.T )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Principal = &quot;</span>,                     self.Principal )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Underlying Asset Price = &quot;</span>,     self.S )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Knock-in Barrier = &quot;</span>,           self.KI_Barrier )  </span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Autocall Barrier = &quot;</span>,           self.KO_Barrier ) </span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Knock-in Price = &quot;</span>,           self.KI_price )  </span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Autocall Price = &quot;</span>,           self.KO_price ) </span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Autocall Coupon = &quot;</span>,            self.KO_Coupon )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Bonus Coupon = &quot;</span>,               self.Bonus_Coupon )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Risk-Free Rate =&quot;</span>,              self.r )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Dividend Rate =&quot;</span>,               self.div )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Volatility = &quot;</span>,                 self.sigma )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Discrete underlying points =&quot;</span>,        self.Ns )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Discrete time points =&quot;</span>,        self.Nt )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Time-Step = &quot;</span>,                  self.dt )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Knock-in Price = &quot;</span>,                  self.KI_price )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Knock-out Price = &quot;</span>,                  self.KO_price )</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;Knock out time = &quot;</span>,                  self.T_KO)</span><br><span class="line">        <span class="built_in">print</span>( <span class="string">&quot;---------------------------------------------&quot;</span> )</span><br></pre></td></tr></table></figure>
+<h3 id="1-2-情景分析"><a href="#1-2-情景分析" class="headerlink" title="1.2 情景分析"></a>1.2 情景分析</h3><p>根据上面雪球产品的条款，可<strong>粗分为三种情景</strong>或<strong>细分为 5 种情景</strong>，先展示细分过程以及每种情景对应的收益或损失。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/snowball%20scenario.png" alt="snowball scenario" style="zoom:88%; display: block; margin: 0 auto;" /></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th style="text-align:center">期初价格</th>
+<th style="text-align:center">上界</th>
+<th style="text-align:center">下界</th>
+<th style="text-align:center">敲出收益(%)</th>
+<th style="text-align:center">红利收益(%)</th>
+<th style="text-align:center">标的价格</th>
+<th style="text-align:center">到期价格</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数学符号</td>
+<td style="text-align:center">$S_0$</td>
+<td style="text-align:center">$K_{out}$</td>
+<td style="text-align:center">$K_{in}$</td>
+<td style="text-align:center">$R_1$</td>
+<td style="text-align:center">$R_2$</td>
+<td style="text-align:center">$S_t$</td>
+<td style="text-align:center">$S_T$</td>
+</tr>
+<tr>
+<td>参数名称</td>
+<td style="text-align:center">$S_0$</td>
+<td style="text-align:center">$K_{out}$</td>
+<td style="text-align:center">$K_{in}$</td>
+<td style="text-align:center">$R_1$</td>
+<td style="text-align:center">$R_2$</td>
+<td style="text-align:center">$S_t$</td>
+<td style="text-align:center">$S_T$</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>从定价的角度来讲，上图的五种情景可以合并成三种：</p>
+<ul>
+<li><p><strong>情景一</strong>：合并情景 1 和 2</p>
+<p>  到期日内观察日标的价格 $S<em>t$ 超过了上界 $K</em>{out}$，即发生敲出。这种情况下产品提前结束，</p>
+<script type="math/tex; mode=display">收益率 = c_1\times\frac{\text{存续月数}}{12}</script></li>
+</ul>
+<ul>
+<li><p><strong>情景二</strong>：情景 3</p>
+<p>  标的价格 $S<em>t$ 一直在 $[K</em>{in},K_{out}]$ 范围内，未发生触碰上下两条边界，</p>
+<script type="math/tex; mode=display">收益率 = c_2</script></li>
+</ul>
+<ul>
+<li><p><strong>情景三</strong>：合并情景 4 和 5</p>
+<p>  到期日内观察日标的价格 $S<em>t$ 跌破了 $K</em>{in}$，到期的时候又回到了期初价格 $S<em>0$ 之上，但是没有触碰 $K</em>{out}$，那么投资者拿回自己的本金。</p>
+<p>  到期日内观察日标的价格 $S<em>t$ 跌破了 $K</em>{in}$，而且到期的时候还在期初价格 $S<em>0$ 之下，但是没有触碰 $K</em>{out}$，那就要承担本金亏损了。</p>
+<p>  合并起来收益率可写成 </p>
+<script type="math/tex; mode=display">收益率 = \text{min}\left(\frac{S_T-S_0}{S_0}, 0\right)=-\text{max}\left(\frac{S_0-S_T}{S_0}, 0\right)=-\frac{1}{S_0}\text{max}\left(S_0-S_T, 0\right)</script></li>
+</ul>
+<h2 id="有限差分法"><a href="#有限差分法" class="headerlink" title="有限差分法"></a>有限差分法</h2><p>有限差分法（Finite Difference）是求解低维微分方程的常用方法，它的主要思 想是通过差分来近似导数，从而找到微分方程的近似解。在 <code>Black-Scholes</code>框架下， 我们假设资产 $S$ 服从几何布朗运动，若有一个挂钩 $S$ 的期权，其在 $S$ 时刻的价值 可表示为标的 $S$ 价格和时间 $t$ 的函数 $f(t,S)$，则期权价值函数服从如下 BS 微分方程：</p>
+<script type="math/tex; mode=display">
+\frac{\partial f}{\partial t}+r S \frac{\partial f}{\partial S}+\frac{1}{2} \sigma^2 S^2 \frac{\partial^2 f}{\partial S^2}=r f,</script><p>其中$r$表示无风险收益率， $\sigma$表示标的波动率。</p>
+<p>我们的求解目标是获得时刻 0 时，不同标的价格下期权的价值函数 $f (0, S )$ 。 注意到上式对所有价值仅依赖于 $t$ 和 $S$ 的期权均成立，比如欧式看涨、看跌或者二元期权等等，对不同支付结构期权的定价是通过设定不同的<strong>边界</strong>和<strong>终值</strong>条件而实现的。</p>
+<hr>
+<h2 id="简单的例子——欧式看涨期权"><a href="#简单的例子——欧式看涨期权" class="headerlink" title="简单的例子——欧式看涨期权"></a>简单的例子——欧式看涨期权</h2><h2 id="定义数学符号与参数名称："><a href="#定义数学符号与参数名称：" class="headerlink" title="定义数学符号与参数名称："></a>定义数学符号与参数名称：</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>数学符号</th>
+<th>参数名称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>观察期年限</td>
+<td>$T$</td>
+<td><code>T</code></td>
+</tr>
+<tr>
+<td>时间单位</td>
+<td>$\Delta t$</td>
+<td><code>dt</code></td>
+</tr>
+<tr>
+<td>标的1格</td>
+<td>$\Delta S$</td>
+<td><code>dS</code></td>
+</tr>
+<tr>
+<td>标的价格上边界</td>
+<td>$S_{\max}$</td>
+<td><code>Smax</code></td>
+</tr>
+<tr>
+<td>标的价格下边界</td>
+<td>$S_{\min}$</td>
+<td><code>Smin</code></td>
+</tr>
+<tr>
+<td>时间总数</td>
+<td>$N$</td>
+<td><code>Nt</code></td>
+</tr>
+<tr>
+<td>标的价格总数</td>
+<td>$M$</td>
+<td><code>Ns</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="问题陈述"><a href="#问题陈述" class="headerlink" title="问题陈述"></a>问题陈述</h3><p>假设到期日为 $T$，行权价为 $K$。</p>
+<ul>
+<li>终值条件: <script type="math/tex">f(T,S) = \max(S-K,0)</script></li>
+<li>边界条件: <script type="math/tex">\left\{\begin{array}{l}
+f\left(t, S_{\max }\right)=S_{\max }-K e^{-r(T-t)}, \quad 0 \leq t \leq T \\
+f(t, 0)=0, \quad 0 \leq t \leq T.
+\end{array}\right.</script><br>其中 $ S_{\max}$ 是一个远大于 $K$ 的常数，是方程在空间维度的上边界。0 是方程在空间维度的下边界。</li>
+</ul>
+<p>为了通过有限差分方法求解 $f (0, S )$ ，我们需要先对定义域划分网格，然后使用差分来近似导数，从而将等式 <a href="#bs_eq">(1)</a> 转化为不同网格点间的线性关系等式。 我们将时间维度上区间 $[0,T]$ 等距划分为 $N$ 段，间隔为 $\Delta t$ 。将空间维度的区间 $[0, S_{\max}]$ 划分为 $M$ 段，间隔为 $\Delta S$ 。即网格中的每个点都可表示为 $[ i \times \Delta t , j \times \Delta S ]$，其中 $0\leq i\leq N$，$0,\leq j \leq M$。<br><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/snowball_call_long.png" alt="欧式看涨期权" style="zoom: 88%; display: block; margin: 0 auto;"></p>
+<h3 id="有限差分方法——求解微分"><a href="#有限差分方法——求解微分" class="headerlink" title="有限差分方法——求解微分"></a>有限差分方法——求解微分</h3><p>根据差分方式的不同，有限差分法可分为显式、隐式和<strong><em>半隐式</em></strong>方法。这些方法的区别在于找到了不同相邻格点之间的线性关系。 我们用符号 $f_{i,j}$ 表示 $f(i\Delta t,j\Delta S)$ 。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/pde_method.png" alt="显式、隐式和半隐式有限差分格式示意图" style="zoom:66%;display: block; margin: 0 auto;" /></p>
+<p>由于半隐式方法更加稳定，收敛速度也更快，我们这里具体介绍半隐式 差分格式的推导与使用。我们用以下有限差分来近似方程 <a href="#bs_eq">(1)</a> 中的偏导数：</p>
+<p>（<strong><em>TODO</em></strong>: 需要做的把显示和隐示也解释清楚，看看能不能用到实战）</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+& \frac{\partial f}{\partial t} \approx \frac{f_{i+1, j}-f_{i, j}}{\Delta t} \\
+& \frac{\partial f}{\partial S} \approx \frac{1}{2}\left(\frac{f_{i+1, j+1}-f_{i+1, j-1}}{2 \Delta S}+\frac{f_{i, j+1}-f_{i, j-1}}{2 \Delta S}\right) \\
+& \frac{\partial^2 f}{\partial S^2} \approx \frac{1}{2}\left(\frac{f_{i+1, j+1}+f_{i+1, j-1}-2 f_{i+1, j}}{\Delta S^2}+\frac{f_{i, j+1}+f_{i, j-1}-2 f_{i, j}}{\Delta S^2}\right)
+\end{aligned}</script><p>代入到方程 <a href="#bs_eq">(1)</a> 中可得：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\frac{f_{i+1, j}-f_{i, j}}{\Delta t}= & -\frac{r j \Delta S}{2}\left(\frac{f_{i+1, j+1}-f_{i+1, j-1}}{2 \Delta S}+\frac{f_{i, j+1}-f_{i, j-1}}{2 \Delta S}\right) \\
+& -\frac{1}{4} \sigma^2 j^2(\Delta S)^2\left(\frac{f_{i+1, j+1}+f_{i+1, j-1}-2 f_{i+1, j}}{\Delta S^2}+\frac{f_{i, j+1}+f_{i, j-1}-2 f_{i, j}}{\Delta S^2}\right) \\
+& +\frac{r}{2}\left(f_{i+1, j}+f_{i, j}\right)
+\end{aligned}</script><p>化简可得共 $M-1$ 个等式：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+& -\alpha_1 f_{i,0}\quad\quad+(1-\beta_1) f_{i,1}\quad\quad\quad-\gamma_1 f_{i,2}\quad\quad = \alpha_1 f_{i+1,0}\quad\quad+(1+\beta_1) f_{i+1,1}\quad\quad\quad-\gamma_2 f_{i+1,2} \\
+& -\alpha_2 f_{i,1}\quad\quad+(1-\beta_2) f_{i,2}\quad\quad\quad-\gamma_2 f_{i,3}\quad\quad = \alpha_2 f_{i+1,1}\quad\quad+(1+\beta_2) f_{i+1,2}\quad\quad\quad-\gamma_3 f_{i+1,3} \\
+&\ldots \\
+& -\alpha_j f_{i,j-1}\quad\quad+(1-\beta_j) f_{i,j}\quad\quad\quad-\gamma_j f_{i,j+1} = \alpha_j f_{i+1,j-1}\quad\quad+(1+\beta_j) f_{i+1,j}\quad\quad\quad-\gamma_j f_{i+1,j+1} \\
+&\ldots \\
+& -\alpha_{M-1} f_{i,M-2}+(1-\beta_{M-1}) f_{i,M-1}-\gamma_{M-1} f_{i,M} = \alpha_{M-1} f_{i+1,M-2}+(1+\beta_{M-1}) f_{i+1,{M-1}}-\gamma_{M-1} f_{i+1,M} \\
+\end{aligned}</script><p>其中</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\alpha_j = \frac{\Delta t}{4} (\sigma^2 j^2 -rj)\\
+&\beta_j = -\frac{\Delta t}{2} (\sigma^2 j^2 +r)\\
+&\gamma_j = \frac{\Delta t}{4} (\sigma^2 j^2 + rj)\\
+\end{aligned}</script><p>进一步，可以将等式 <a href="#bs_pde">(2)</a>写成矩阵形式：</p>
+<script type="math/tex; mode=display">
+\mathbf{M}_1 \boldsymbol{f}_i =  \mathbf{M}_2 \boldsymbol{f}_{i+1} +\boldsymbol{b}</script><p>其中矩阵 $\mathbf{M}<em>1, \mathbf{M}</em>{2} \in \mathbb{R}^{(M-1) \times (M-1)}$:</p>
+<script type="math/tex; mode=display">
+\mathbf{M}_1 = \begin{bmatrix}
+    1-\beta_1 & -\gamma_1 & 0 & \cdots &0 &0 \\
+    -\alpha_2 & 1-\beta_2 & -\gamma_2 & \cdots &0 &0 \\
+    0 & -\alpha_3 & 1-\beta_3 & \cdots &0 &0 \\
+    \vdots & \vdots & \vdots & \ddots &\vdots &\vdots\\
+    0 &  0 &0 &\cdots   & 1-\beta_{M-2} & -\gamma_{M-2} \\
+    0 &  0 &0 &\cdots   & -\alpha_{M-1} &1-\beta_{M-1} \\
+\end{bmatrix}</script><script type="math/tex; mode=display">
+\mathbf{M}_2 = \begin{bmatrix}
+    1+\beta_1 & \gamma_1 & 0 & \cdots &0 &0 \\
+    \alpha_2 & 1+\beta_2 & \gamma_2 & \cdots &0 &0 \\
+    0 & \alpha_3 & 1+\beta_3 & \cdots &0 &0 \\
+    \vdots & \vdots & \vdots & \ddots &\vdots &\vdots\\
+    0 &  0 &0 &\cdots   & 1+\beta_{M-2} & \gamma_{M-2} \\
+    0 &  0 &0 &\cdots   & \alpha_{M-1} &1+\beta_{M-1} \\
+\end{bmatrix}</script><p>其中向量 $\mathbf{f}<em>i, \mathbf{f}</em>{i+1}, \mathbf{b} \in \mathbb{R}^{M-1}$:</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&\mathbf{f}_i = [f_{i,1},f_{i,2},\ldots,f_{i,M-1}]^\top\\
+&\mathbf{b}_i = [\alpha_1(f_{i,0}+f_{i+1,0}),0,\ldots,0,\gamma_{M-1}(f_{i,M}+f_{i+1,M})]^\top\\
+\end{aligned}</script><p>等式 <a href="#bs_pde_mat">(3)</a> 给出了一个向量迭代等式，我们从<strong><em>终值</em></strong> $\boldsymbol{f}<em>{N+1}$ 出发向前逐步迭代，最终得到 $\boldsymbol{f}</em>{0}$ ，即期权在期初的价格向量。</p>
+<h3 id="LU分解法"><a href="#LU分解法" class="headerlink" title="LU分解法"></a>LU分解法</h3><p>注意此步骤通过 <code>scipy</code> 可直接得出，下面仅做理解</p>
+<h4 id="LU分解法-1"><a href="#LU分解法-1" class="headerlink" title="LU分解法"></a>LU分解法</h4><p>我们可以重构等式 <a href="#lu_">(3)</a> 为</p>
+<script type="math/tex; mode=display">
+\mathbf{M}_1 \boldsymbol{f} = Q</script><p>其中 $\boldsymbol{f}:=\boldsymbol{f}<em>{i}$， $\boldsymbol{Q}:=\mathbf{M}_2\boldsymbol{f}</em>{i+1} + \boldsymbol{b}$  均为 $M-1$ 维向量。  注意向量 $\boldsymbol{Q}$ 包含时间步骤 $i+1$ 的上一步期权值数组（已知）和边界条件的信息（$\boldsymbol{b}$）。</p>
+<p>由于 $\mathbf{M}_1$ 是 tridiagonal 的 直接可以分解为其他两个矩阵的乘积 (LU分解)，一个对角和子对角线上非零的矩阵 $\mathbf{L}$，另一个沿对角和超对角线非零的矩阵 $\mathbf{U}$。如下所示</p>
+<script type="math/tex; mode=display">
+\mathbf{M}_1 = \begin{bmatrix}
+    1-\beta_1 & -\gamma_1 & 0 & \cdots &0 &0 \\
+    -\alpha_2 & 1-\beta_2 & -\gamma_2 & \cdots &0 &0 \\
+    0 & -\alpha_3 & 1-\beta_3 & \cdots &0 &0 \\
+    \vdots & \vdots & \vdots & \ddots &\vdots &\vdots\\
+    0 &  0 &0 &\cdots   & 1-\beta_{M-2} & -\gamma_{M-2} \\
+    0 &  0 &0 &\cdots   & -\alpha_{M-1} &1-\beta_{M-1} \\
+\end{bmatrix}</script><script type="math/tex; mode=display">
+= \mathbf{L}\mathbf{U} = \begin{bmatrix}
+   1 & 0 & 0 & \cdots &0 &0 \\
+    l_2 & 1 & 0 & \cdots &0 &0 \\
+    0 & l_3 & 1 & \cdots &0 &0 \\
+    \vdots & \vdots & \vdots & \ddots &\vdots &\vdots\\
+    0 &  0 &0 &\cdots   & 1 & 0 \\
+    0 &  0 &0 &\cdots   & l_{M-1} &1 \\
+\end{bmatrix}
+\begin{bmatrix}
+    d_1 & u_1 & 0 & \cdots &0 &0 \\
+    0 & d_2 & u_2 & \cdots &0 &0 \\
+    0 & 0 & d_3 & \cdots &0 &0 \\
+    \vdots & \vdots & \vdots & \ddots &\vdots &\vdots\\
+    0 &  0 &0 &\cdots   & d_{M-2} & u_{M-2} \\
+    0 &  0 &0 &\cdots   & 0 &d_{M-1} \\
+\end{bmatrix}</script><p>显然 $d_1 = 1-\beta_1$，然后可得对任意 $j \in [2,M-1] \cap \mathbb{N}^+$，有</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+&u_{j-1} = -\gamma_{j-1}\\
+&d_{j} = 1-\beta_j-l_j u_{j-1}\\
+&l_j d_{j-1} = -\alpha_j\\
+\end{aligned}</script><h4 id="LU迭代步骤分析"><a href="#LU迭代步骤分析" class="headerlink" title="LU迭代步骤分析"></a>LU迭代步骤分析</h4><p>现在我们利用分解来求解原始矩阵方程 <a href="#lu_">(4)</a>，首先我们为了符号简便，我们改成如下方程。我们的目标是解出 $\boldsymbol{f} $，LU分解后的方程形式也展示如下：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\mathbf{M}_1 \boldsymbol{f} &=  \boldsymbol{Q}\tag{5} \\ 
+\mathbf{L} \mathbf{U} \boldsymbol{f} &=  \boldsymbol{Q} \tag{6}\\ 
+\mathbf{L} \boldsymbol{w} &=  \boldsymbol{Q}\tag{7}\\ 
+\end{align}</script><p>其中 $\boldsymbol{f}:=\boldsymbol{f}<em>{i}$， $\boldsymbol{Q}:=\mathbf{M}_2\boldsymbol{f}</em>{i+1} + \boldsymbol{b}$ 和 $\boldsymbol{w}=\mathbf{U} \boldsymbol{f}$ 均为 $M-1$ 维向量。</p>
+<p>为了方便理解，再将矩阵代入：</p>
+<script type="math/tex; mode=display">
+\mathbf{L} \boldsymbol{w}=\boldsymbol{q} \quad \Longrightarrow \quad 
+\begin{bmatrix}
+   1 & 0 & 0 & \cdots &0 &0 \\
+    l_2 & 1 & 0 & \cdots &0 &0 \\
+    0 & l_3 & 1 & \cdots &0 &0 \\
+    \vdots & \vdots & \vdots & \ddots &\vdots &\vdots\\
+    0 &  0 &0 &\cdots   & 1 & 0 \\
+    0 &  0 &0 &\cdots   & l_{M-1} &1 \\
+\end{bmatrix}
+\begin{bmatrix}
+   w_1 \\
+   w_2\\
+    w_3 \\
+    \vdots \\
+    w_{M-2} \\
+    w_{M-1} \\
+\end{bmatrix}=
+\begin{bmatrix}
+   q_1 \\
+   q_2\\
+    q_3 \\
+    \vdots \\
+    q_{M-2} \\
+    q_{M-1} \\
+\end{bmatrix}</script><script type="math/tex; mode=display">
+\mathbf{U} \boldsymbol{f}  = \boldsymbol{w} \quad \Longrightarrow \quad 
+\begin{bmatrix}
+    d_1 & u_1 & 0 & \cdots &0 &0 \\
+    0 & d_2 & u_2 & \cdots &0 &0 \\
+    0 & 0 & d_3 & \cdots &0 &0 \\
+    \vdots & \vdots & \vdots & \ddots &\vdots &\vdots\\
+    0 &  0 &0 &\cdots   & d_{M-2} & u_{M-2} \\
+    0 &  0 &0 &\cdots   & 0 &d_{M-1} \\
+\end{bmatrix}
+\begin{bmatrix}
+   f_1 \\
+   f_2\\
+    f_3 \\
+    \vdots \\
+    f_{M-2} \\
+    f_{M-1} \\
+\end{bmatrix}=
+\begin{bmatrix}
+   w_1 \\
+   w_2\\
+    w_3 \\
+    \vdots \\
+    w_{M-2} \\
+    w_{M-1} \\
+\end{bmatrix}</script><p>通过迭代来解出 $\boldsymbol{f}$，迭代核心思想是先解 $\boldsymbol{w}$， 然后通过 $\boldsymbol{w}=\mathbf{U} \boldsymbol{f}$ 求解。</p>
+<p>我们来看下向量 $\boldsymbol{w}$ 如何迭代的：(正序)</p>
+<ol>
+<li>注意 $w_1 = q_1$</li>
+<li>$w<em>j = q_j- w</em>{j-1} l_{j}$ for $2\le j \le M-1$</li>
+</ol>
+<p>再来看 $\boldsymbol{f}$ 如何迭代的： (倒序)</p>
+<ol>
+<li>注意由第 $M-1$ 行可以推出 $f<em>{M-1} = w</em>{M-1} d_{M-1}^{-1}$</li>
+<li>$f<em>{j} = (w_j - u</em>{j}f<em>{j+1}) d</em>{j}^{-1} $ for $ M-2 \ge j \ge 1$</li>
+</ol>
+<h4 id="LU优势与劣势"><a href="#LU优势与劣势" class="headerlink" title="LU优势与劣势"></a>LU优势与劣势</h4><p>优势：</p>
+<ul>
+<li>快</li>
+<li>如果矩阵 $\mathbf{M}_1$ 与时间无关，分解只需要进行一次</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>不能直接应用于美式期权</li>
+<li>如果矩阵 $\mathbf{M}_1$ 依赖于时间，则每个时间步骤都必须进行分解</li>
+</ul>
+<h1 id="雪球产品价值"><a href="#雪球产品价值" class="headerlink" title="雪球产品价值"></a>雪球产品价值</h1><p>雪球产品可以分解为若干障碍期权的组合，这意味着我们 可以先对分解后的多个障碍期权定价，然后加总得到雪球产品价值。</p>
+<h2 id="情景1-敲出"><a href="#情景1-敲出" class="headerlink" title="情景1: 敲出"></a>情景1: 敲出</h2><p>这种情况的payoff可以认为是一个上涨生效触碰期权(One-Touch Up,<strong>OTU</strong>)。若在到期日T内观察日的标的价格$S<em>t \geq K</em>{out}$，则产品自动赎回，$收益率 = c_1\times\frac{\text{存续月数}}{12}$。</p>
+<script type="math/tex; mode=display">
+V_1 = OTU\left(R = \left[\frac{3c_1}{12},\frac{4c_1}{12},\ldots,\frac{12c_1}{12}\right]\right)</script><p>其中 $R_1$是敲出票息。</p>
+<blockquote>
+<p>NOTE: 障碍是离散的，且敲出收益依赖于敲出时间。</p>
+</blockquote>
+<p>我们首先给出此 <strong>OTU</strong> 期权价格函数满足的 PDE 示意图，图中给出了方程的边界和终值条件。其中方程下边界为 $S=0$，在下边界的函数值为 $0$；上边界为一个远大于 $S<em>0$ 的数，这里设定为 $4$ (<code>S_max_rate</code>) 倍的敲出价格 $K</em>{out}$ ，上边界处各个观察日 $t_i$ 函数值等于敲出收益</p>
+<script type="math/tex; mode=display">
+R_1 \times t_i</script><p>方程终值条件为 $f(T,S)=0$。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/pde_otu.png" alt="上涨生效触碰期权 PDE 示意图" style="zoom:66%;display: block; margin: 0 auto;" /></p>
+<ul>
+<li>终值条件: <script type="math/tex">f(T,S) = 0</script></li>
+<li>边界条件: <script type="math/tex">\left\{\begin{array}{l}
+f\left(t_i, S_{\max }\right)=c_1 * t_i, \quad t_1 \leq t_i \leq t_{N-1}\\
+f(t, 0)=0, \quad 0 \leq t \leq T.
+\end{array}\right.</script><br>其中上边界远大于 $S<em>0$ 的数，这里设定为 $4$ (<code>S_max_rate</code>) 倍的敲出价格 $K</em>{out}$ 。0 是方程在空间维度的下边界。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Snowball_One_Touch_Up</span>(<span class="title class_ inherited__">Snowball_Parameters</span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    payoff in the case when knock_out</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__(**kwargs)</span><br><span class="line">        self.Smax = <span class="number">4</span> * self.KO_price</span><br><span class="line">        self.Smin = <span class="number">0</span></span><br><span class="line">        self.dS =  (self.Smax-self.Smin)/self.Ns</span><br><span class="line">        self.Svec = np.linspace(self.Smin, self.Smax, self.Ns+<span class="number">1</span>)</span><br><span class="line">        self.grid = np.zeros(shape=(self.Ns+<span class="number">1</span>, self.Nt+<span class="number">1</span>))</span><br><span class="line">        self.Return_vec = self.KO_Coupon * self.T_KO</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_set_terminal_condition_</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_set_boundary_condition_</span>(<span class="params">self</span>): </span><br><span class="line">        <span class="comment"># discrete barrier with multiple rebates</span></span><br><span class="line">        f = spi.interp1d(self.T_KO, self.Return_vec, kind=<span class="string">&#x27;next&#x27;</span>, bounds_error=<span class="literal">False</span>, fill_value=(self.Return_vec[<span class="number">0</span>],self.Return_vec[-<span class="number">1</span>]))</span><br><span class="line">        <span class="comment"># upper bound at non-knock-out point</span></span><br><span class="line">        self.grid[-<span class="number">1</span>, :] = f(self.Tvec) <span class="comment">#* np.exp(-self.r*self.tau)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_set_coefficient_</span>(<span class="params">self</span>):</span><br><span class="line">        drift = (self.r-self.div)*self.Svec[<span class="number">1</span>:-<span class="number">1</span>]/self.dS</span><br><span class="line">        diffusion_square = (self.sigma*self.Svec[<span class="number">1</span>:-<span class="number">1</span>]/self.dS)**<span class="number">2</span></span><br><span class="line">        </span><br><span class="line">        self.l = <span class="number">1</span>/<span class="number">4</span>*(diffusion_square - drift)</span><br><span class="line">        self.c = <span class="number">1</span>/<span class="number">2</span>*(-diffusion_square - self.r)</span><br><span class="line">        self.u = <span class="number">1</span>/<span class="number">4</span>*(diffusion_square + drift)</span><br><span class="line"></span><br><span class="line">        self.A = sp.diags([self.l[<span class="number">1</span>:], self.c, self.u[:-<span class="number">1</span>]], [-<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>],  <span class="built_in">format</span>=<span class="string">&#x27;csc&#x27;</span>)</span><br><span class="line">        self.I = sp.eye(self.Ns-<span class="number">1</span>)</span><br><span class="line">        self.M1 = self.I - self.dt*self.A</span><br><span class="line">        self.M2 = self.I + self.dt*self.A</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_solve_</span>(<span class="params">self</span>):</span><br><span class="line">        _, M_lower, M_upper = sla.lu(self.M1.toarray())</span><br><span class="line">        </span><br><span class="line">        <span class="comment">#* 1.set boundary condition at T_KO</span></span><br><span class="line">        KO_idx = np.searchsorted(self.Tvec, self.T_KO)</span><br><span class="line">        update_bool_idx =  (self.Svec&gt;=self.KO_price)</span><br><span class="line">        rbt = self.Return_vec <span class="comment">#* np.exp(-self.r*self.tau)</span></span><br><span class="line">        <span class="comment"># </span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">reversed</span>(np.arange(self.Nt)):</span><br><span class="line">            </span><br><span class="line">            <span class="comment">#* 2.set boundary condition at T_KO</span></span><br><span class="line">            <span class="keyword">if</span> i+<span class="number">1</span> <span class="keyword">in</span> KO_idx:</span><br><span class="line">                k = np.where(KO_idx==i+<span class="number">1</span>)[<span class="number">0</span>]</span><br><span class="line">                self.grid[update_bool_idx, i+<span class="number">1</span>] = rbt[k]  </span><br><span class="line"></span><br><span class="line">            Q = self.M2.dot(self.grid[<span class="number">1</span>:-<span class="number">1</span>, i+<span class="number">1</span>])</span><br><span class="line">            </span><br><span class="line">            Q[<span class="number">0</span>] += self.l[<span class="number">0</span>]*(self.dt*self.grid[<span class="number">0</span>, i] +self.dt*self.grid[<span class="number">0</span>, i+<span class="number">1</span>] )</span><br><span class="line">            Q[-<span class="number">1</span>] += self.u[-<span class="number">1</span>]*(self.dt*self.grid[-<span class="number">1</span>, i]+self.dt*self.grid[-<span class="number">1</span>, i+<span class="number">1</span>] )</span><br><span class="line">            </span><br><span class="line">            Ux = sla.solve_triangular( M_lower, Q, lower=<span class="literal">True</span> )</span><br><span class="line">            self.grid[<span class="number">1</span>:-<span class="number">1</span>, i] = sla.solve_triangular( M_upper, Ux, lower=<span class="literal">False</span> )</span><br><span class="line">            </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_interpolate_</span>(<span class="params">self</span>):</span><br><span class="line">        tck = spi.splrep( self.Svec, self.grid[:,<span class="number">0</span>], k=<span class="number">3</span> )</span><br><span class="line">        <span class="keyword">return</span> spi.splev( self.St, tck )</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">price</span>(<span class="params">self</span>):</span><br><span class="line">        self._set_terminal_condition_()</span><br><span class="line">        self._set_boundary_condition_()</span><br><span class="line">        self._set_coefficient_()</span><br><span class="line">        self._solve_()</span><br><span class="line">        <span class="keyword">return</span> self._interpolate_()*self.Principal   </span><br></pre></td></tr></table></figure>
+<h2 id="情景2-未敲入未敲出"><a href="#情景2-未敲入未敲出" class="headerlink" title="情景2: 未敲入未敲出"></a>情景2: 未敲入未敲出</h2><p>若标的价格一直在敲入价 $K<em>{in}$ 和敲出价 $K</em>{out}$ 范围内，即未触碰上下边界，则产品期末有收益率 = $c_1$ 。这种情况下的支付可看作一个双边失效触碰期权（Double No-Touch，<strong>DNT</strong>）。</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+V_2 = \text{DNT}(R=c_2)
+\end{equation}</script><p>其中 $R_1$ 是红利票息</p>
+<p>首先我们定义双边触碰生效期权（Double One-Touch，<strong>DOT</strong>），<strong>DOT</strong> 与 <strong>DNT</strong> 支付结构对称，当标的价格触碰到敲出价时才进行支付，否则支付为 0。因此，一个双边触碰失效期权（DNT）与双边触碰生效期权（DOT）的组合是无风险的，在期末获得无风险收益 $R_1$ 。两者价格存在如下平价关系：</p>
+<script type="math/tex; mode=display">
+DNT +DOT = c_2 T \exp\{-rT\}</script><p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/pde_dot.png" alt="双边触碰生效期权（DOT）PDE 示意图" style="zoom:66%;display: block; margin: 0 auto;" /></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Snowball_Double_No_Touch</span>(<span class="title class_ inherited__">Snowball_Parameters</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    present value of bonus coupon if not KO and not KI</span></span><br><span class="line"><span class="string">    V_&#123;DNT&#125;+V_&#123;DOT&#125; = R * exp&#123;-r*T&#125;</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__(**kwargs)</span><br><span class="line">        self.Smax = <span class="number">4</span> * self.KO_price</span><br><span class="line">        self.Smin = self.KI_price</span><br><span class="line">        self.dS =  (self.Smax-self.Smin)/self.Ns</span><br><span class="line">        self.Svec = np.linspace(self.Smin, self.Smax, self.Ns+<span class="number">1</span>)</span><br><span class="line">        self.grid = np.zeros(shape=(self.Ns+<span class="number">1</span>, self.Nt+<span class="number">1</span>))</span><br><span class="line">        self.Return = self.T * self.Bonus_Coupon</span><br><span class="line">          </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_set_terminal_condition_</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_set_boundary_condition_</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># upper bound at non-knock-out point</span></span><br><span class="line">        self.grid[<span class="number">0</span>,  :] = self.Return * np.exp(-self.r* self.tau)</span><br><span class="line">        self.grid[-<span class="number">1</span>,  :] = self.Return * np.exp(-self.r* self.tau)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_set_coefficient_</span>(<span class="params">self</span>):</span><br><span class="line">        drift = (self.r-self.div)*self.Svec[<span class="number">1</span>:-<span class="number">1</span>]/self.dS</span><br><span class="line">        diffusion_square = (self.sigma*self.Svec[<span class="number">1</span>:-<span class="number">1</span>]/self.dS)**<span class="number">2</span></span><br><span class="line">        </span><br><span class="line">        self.l = <span class="number">1</span>/<span class="number">4</span>*(diffusion_square - drift)</span><br><span class="line">        self.c = <span class="number">1</span>/<span class="number">2</span>*(-diffusion_square - self.r)</span><br><span class="line">        self.u = <span class="number">1</span>/<span class="number">4</span>*(diffusion_square + drift)</span><br><span class="line"></span><br><span class="line">        self.A = sp.diags([self.l[<span class="number">1</span>:], self.c, self.u[:-<span class="number">1</span>]], [-<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>],  <span class="built_in">format</span>=<span class="string">&#x27;csc&#x27;</span>)</span><br><span class="line">        self.I = sp.eye(self.Ns-<span class="number">1</span>)</span><br><span class="line">        self.M1 = self.I - self.dt*self.A</span><br><span class="line">        self.M2 = self.I + self.dt*self.A</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_solve_</span>(<span class="params">self</span>):</span><br><span class="line">        _, M_lower, M_upper = sla.lu(self.M1.toarray())</span><br><span class="line">        </span><br><span class="line">        <span class="comment">#* 1.set boundary condition at T_KO</span></span><br><span class="line">        KO_idx = np.searchsorted(self.Tvec, self.T_KO)</span><br><span class="line">        update_bool_idx =  (self.Svec&gt;=self.KO_price)</span><br><span class="line">        rbt = self.Return * np.exp(-self.r*(self.T-self.T_KO)) <span class="comment">#! set boundary condition at T_KO</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">reversed</span>(np.arange(self.Nt)):</span><br><span class="line">            <span class="comment">#* 2.set boundary condition at T_KO</span></span><br><span class="line">            <span class="keyword">if</span> i+<span class="number">1</span> <span class="keyword">in</span> KO_idx:</span><br><span class="line">                k = np.where(KO_idx==i+<span class="number">1</span>)[<span class="number">0</span>]</span><br><span class="line">                self.grid[update_bool_idx, i+<span class="number">1</span>] = rbt[k]  </span><br><span class="line"></span><br><span class="line">            Q = self.M2.dot(self.grid[<span class="number">1</span>:-<span class="number">1</span>, i+<span class="number">1</span>])</span><br><span class="line">            </span><br><span class="line">            Q[<span class="number">0</span>] += self.l[<span class="number">0</span>]*(self.dt*self.grid[<span class="number">0</span>, i] +self.dt*self.grid[<span class="number">0</span>, i+<span class="number">1</span>] )</span><br><span class="line">            Q[-<span class="number">1</span>] += self.u[-<span class="number">1</span>]*(self.dt*self.grid[-<span class="number">1</span>, i]+self.dt*self.grid[-<span class="number">1</span>, i+<span class="number">1</span>] )</span><br><span class="line">            </span><br><span class="line">            Ux = sla.solve_triangular( M_lower, Q, lower=<span class="literal">True</span> )</span><br><span class="line">            self.grid[<span class="number">1</span>:-<span class="number">1</span>, i] = sla.solve_triangular( M_upper, Ux, lower=<span class="literal">False</span> )</span><br><span class="line">            </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_interpolate_</span>(<span class="params">self</span>):</span><br><span class="line">        tck = spi.splrep( self.Svec, self.grid[:,<span class="number">0</span>], k=<span class="number">3</span> )</span><br><span class="line">        <span class="keyword">return</span> spi.splev( self.St, tck )</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">price</span>(<span class="params">self</span>):</span><br><span class="line">        self._set_terminal_condition_()</span><br><span class="line">        self._set_boundary_condition_()</span><br><span class="line">        self._set_coefficient_()</span><br><span class="line">        self._solve_()</span><br><span class="line">        V_DOT = self._interpolate_()</span><br><span class="line">        V_R = (self.Return) * np.exp(-self.r*self.T)</span><br><span class="line">        <span class="keyword">return</span>  (V_R - V_DOT) * self.Principal</span><br></pre></td></tr></table></figure>
+<h2 id="情景3-敲入未敲出"><a href="#情景3-敲入未敲出" class="headerlink" title="情景3: 敲入未敲出"></a>情景3: 敲入未敲出</h2><h3 id="put-short-卖一个看跌期权"><a href="#put-short-卖一个看跌期权" class="headerlink" title="put short 卖一个看跌期权"></a>put short 卖一个看跌期权</h3><p>情景三下的支付就是<strong>卖</strong>一个本金为 $\frac{1}{S_0}$，行权价格为期初价格 $K=S_0$ 的看跌期权 (注意负号)，收益率 = $-\frac{1}{S_0}\text{max}\left(K-S_T, 0\right)$</p>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/S3%20A.jpg" alt="敲入未敲出——保本" style="zoom:100%;display: block; margin: 0 auto;" /></p>
+<p>\<br><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/S3%20B.jpg" alt="敲入未敲出——亏本" style="zoom:100%;display: block; margin: 0 auto;" /></p>
+<p>情景三的支付可由一个<strong>上涨失效看跌障碍期权 (Up and Out Put, UOP)</strong> 和一个<strong>双边失效看跌障碍期权 (Double Knock-Out Put, DKOP)</strong> 来复制</p>
+<script type="math/tex; mode=display">
+\begin{equation}
+V_3 = \frac{1}{S_0}\times[\text{DKOP}(K=S_0,K_{in},K_{out}) - \text{UOP}(K=S_0,K_{out})]
+\end{equation}</script><p>其中 $\frac{1}{S_0}$ 是 UOP 和 DKOP 的本金。</p>
+<p>验证“情景三的支付”和“复制组合的支付”是否一致，先看 $V_3$ 的支付情况：</p>
+<ul>
+<li><strong>情景一</strong>：只要敲出 (不管是否敲入)，支付为零</li>
+<li><strong>情景二</strong>：既没敲入也没敲出，支付为零</li>
+<li><strong>情景三</strong>：但只要敲入而且从未敲出时，到期日支付为 $-\frac{1}{S_0}\text{max}\left(K-S_T, 0\right)$</li>
+</ul>
+<p>再看 DKOP - UOP 的支付情况：</p>
+<ul>
+<li><strong>情景一</strong>：只要敲出，UOP 和 DKOP 都敲出，两个支付都为零，因此总支付为零，吻合</li>
+<li><strong>情景二</strong>：既没敲入也没敲出，UOP 和 DKOP 到期日的支付一样，两者相减总支付为零，吻合</li>
+<li><strong>情景三</strong>：当价格触碰 DKOP 下边界但没有触碰上边界时，DKOP 敲出支付为零，UOP 保持看跌期权的支付 $\text{max}(S_0 - S_T, 0)$，带着本金两者相减总支付 $-\frac{1}{S_0}\text{max}(S_0 - S_T, 0)$，吻合</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/image-20230826114441767.png" alt="image-20230826114441767" style="zoom:67%;" /><br><img src="https://cdn.jsdelivr.net/gh/tobi0520/picgo_img/image-20230826114451469.png" alt="image-20230826114451469" style="zoom:67%;" /></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Snowball_Up_Out_Put</span>(<span class="title class_ inherited__">Snowball_Parameters</span>):   </span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    value of up out put</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__(**kwargs)</span><br><span class="line">        self.Smax = <span class="number">4</span> * self.S      <span class="comment">#? K_out?</span></span><br><span class="line">        self.Smin = <span class="number">0</span></span><br><span class="line">        self.dS =  (self.Smax-self.Smin)/self.Ns</span><br><span class="line">        self.Svec = np.linspace(self.Smin, self.Smax, self.Ns+<span class="number">1</span>)</span><br><span class="line">        self.grid = np.zeros(shape=(self.Ns+<span class="number">1</span>, self.Nt+<span class="number">1</span>))</span><br><span class="line">        self.Return = <span class="number">0</span> <span class="comment">#!UOP f=0 at (T_KO, which &gt;KO_price)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_set_terminal_condition_</span>(<span class="params">self</span>):</span><br><span class="line">        self.grid[:, -<span class="number">1</span>] = np.maximum((self.S - self.Svec ), <span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_set_boundary_condition_</span>(<span class="params">self</span>):</span><br><span class="line">        DF_div = np.exp(-self.div*self.tau)</span><br><span class="line">        DF_r = np.exp(-self.r*self.tau)</span><br><span class="line"></span><br><span class="line">        self.grid[<span class="number">0</span>,  :] = np.maximum(self.S * DF_r - self.Smin * DF_div, <span class="number">0</span>) <span class="comment">#! S_0 * DF</span></span><br><span class="line">        <span class="comment"># self.grid[0,  :] = self.S * np.exp(-self.r*self.tau)</span></span><br><span class="line">        self.grid[-<span class="number">1</span>, :] = <span class="number">0</span> </span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_set_coefficient_</span>(<span class="params">self</span>):</span><br><span class="line">        drift = (self.r-self.div)*self.Svec[<span class="number">1</span>:-<span class="number">1</span>]/self.dS</span><br><span class="line">        diffusion_square = (self.sigma*self.Svec[<span class="number">1</span>:-<span class="number">1</span>]/self.dS)**<span class="number">2</span></span><br><span class="line">        </span><br><span class="line">        self.l = <span class="number">1</span>/<span class="number">4</span>*(diffusion_square - drift)</span><br><span class="line">        self.c = <span class="number">1</span>/<span class="number">2</span>*(-diffusion_square - self.r)</span><br><span class="line">        self.u = <span class="number">1</span>/<span class="number">4</span>*(diffusion_square + drift)</span><br><span class="line"></span><br><span class="line">        self.A = sp.diags([self.l[<span class="number">1</span>:], self.c, self.u[:-<span class="number">1</span>]], [-<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>],  <span class="built_in">format</span>=<span class="string">&#x27;csc&#x27;</span>)</span><br><span class="line">        self.I = sp.eye(self.Ns-<span class="number">1</span>)</span><br><span class="line">        self.M1 = self.I - self.dt*self.A</span><br><span class="line">        self.M2 = self.I + self.dt*self.A</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_solve_</span>(<span class="params">self</span>):</span><br><span class="line">        _, M_lower, M_upper = sla.lu(self.M1.toarray())</span><br><span class="line">        <span class="comment">#* 1.set boundary condition at T_KO</span></span><br><span class="line">        KO_idx = np.searchsorted(self.Tvec, self.T_KO)</span><br><span class="line">        update_bool_idx =  (self.Svec&gt;=self.KO_price)</span><br><span class="line">        rbt = self.Return * np.exp(-self.r*(self.T-self.T_KO)) <span class="comment">#* note that self.Return = 0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">reversed</span>(np.arange(self.Nt)):</span><br><span class="line">            <span class="comment">#* 2.set boundary condition at T_KO</span></span><br><span class="line">            <span class="keyword">if</span> i+<span class="number">1</span> <span class="keyword">in</span> KO_idx:</span><br><span class="line">                k = np.where(KO_idx==i+<span class="number">1</span>)[<span class="number">0</span>]</span><br><span class="line">                self.grid[update_bool_idx, i+<span class="number">1</span>] = rbt[k]  </span><br><span class="line"></span><br><span class="line">            Q = self.M2.dot(self.grid[<span class="number">1</span>:-<span class="number">1</span>, i+<span class="number">1</span>])</span><br><span class="line">            </span><br><span class="line">            Q[<span class="number">0</span>] += self.l[<span class="number">0</span>]*(self.dt*self.grid[<span class="number">0</span>, i] +self.dt*self.grid[<span class="number">0</span>, i+<span class="number">1</span>] )</span><br><span class="line">            Q[-<span class="number">1</span>] += self.u[-<span class="number">1</span>]*(self.dt*self.grid[-<span class="number">1</span>, i]+self.dt*self.grid[-<span class="number">1</span>, i+<span class="number">1</span>] )</span><br><span class="line">            </span><br><span class="line">            Ux = sla.solve_triangular( M_lower, Q, lower=<span class="literal">True</span> )</span><br><span class="line">            self.grid[<span class="number">1</span>:-<span class="number">1</span>, i] = sla.solve_triangular( M_upper, Ux, lower=<span class="literal">False</span> )</span><br><span class="line">            </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_interpolate_</span>(<span class="params">self</span>):</span><br><span class="line">        tck = spi.splrep( self.Svec, self.grid[:,<span class="number">0</span>], k=<span class="number">3</span> )</span><br><span class="line">        <span class="keyword">return</span> spi.splev( self.St, tck )</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">price</span>(<span class="params">self</span>):</span><br><span class="line">        self._set_terminal_condition_()</span><br><span class="line">        self._set_boundary_condition_()</span><br><span class="line">        self._set_coefficient_()</span><br><span class="line">        self._solve_()</span><br><span class="line">        <span class="keyword">return</span> self._interpolate_()/self.S * self.Principal</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Snowball_Double_Knock_Out_Put</span>(<span class="title class_ inherited__">Snowball_Parameters</span>):   </span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    value of double konck-out put</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__(**kwargs)</span><br><span class="line">        self.Smax = <span class="number">4</span> * self.S      <span class="comment">#? K_out?</span></span><br><span class="line">        self.Smin = self.KI_price</span><br><span class="line">        self.dS =  (self.Smax-self.Smin)/self.Ns</span><br><span class="line">        self.Svec = np.linspace(self.Smin, self.Smax, self.Ns+<span class="number">1</span>)</span><br><span class="line">        self.grid = np.zeros(shape=(self.Ns+<span class="number">1</span>, self.Nt+<span class="number">1</span>))</span><br><span class="line">        self.Return = <span class="number">0</span> <span class="comment">#!UOP f=0 at (T_KO, which &gt;KO_price)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_set_terminal_condition_</span>(<span class="params">self</span>):</span><br><span class="line">        self.grid[:, -<span class="number">1</span>] = np.maximum((self.S - self.Svec ), <span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_set_boundary_condition_</span>(<span class="params">self</span>):</span><br><span class="line">        self.grid[<span class="number">0</span>,  :] = <span class="number">0</span></span><br><span class="line">        self.grid[-<span class="number">1</span>, :] = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_set_coefficient_</span>(<span class="params">self</span>):</span><br><span class="line">        drift = (self.r-self.div)*self.Svec[<span class="number">1</span>:-<span class="number">1</span>]/self.dS</span><br><span class="line">        diffusion_square = (self.sigma*self.Svec[<span class="number">1</span>:-<span class="number">1</span>]/self.dS)**<span class="number">2</span></span><br><span class="line">        </span><br><span class="line">        self.l = <span class="number">1</span>/<span class="number">4</span>*(diffusion_square - drift)</span><br><span class="line">        self.c = <span class="number">1</span>/<span class="number">2</span>*(-diffusion_square - self.r)</span><br><span class="line">        self.u = <span class="number">1</span>/<span class="number">4</span>*(diffusion_square + drift)</span><br><span class="line"></span><br><span class="line">        self.A = sp.diags([self.l[<span class="number">1</span>:], self.c, self.u[:-<span class="number">1</span>]], [-<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>],  <span class="built_in">format</span>=<span class="string">&#x27;csc&#x27;</span>)</span><br><span class="line">        self.I = sp.eye(self.Ns-<span class="number">1</span>)</span><br><span class="line">        self.M1 = self.I - self.dt*self.A</span><br><span class="line">        self.M2 = self.I + self.dt*self.A</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_solve_</span>(<span class="params">self</span>):</span><br><span class="line">        _, M_lower, M_upper = sla.lu(self.M1.toarray())</span><br><span class="line">        <span class="comment">#* 1.set boundary condition at T_KO</span></span><br><span class="line">        KO_idx = np.searchsorted(self.Tvec, self.T_KO)</span><br><span class="line">        update_bool_idx =  (self.Svec&gt;=self.KO_price)</span><br><span class="line">        rbt = self.Return * np.exp(-self.r*(self.T-self.T_KO)) <span class="comment">#* note that self.Return = 0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">reversed</span>(np.arange(self.Nt)):</span><br><span class="line">            <span class="comment">#* 2.set boundary condition at T_KO</span></span><br><span class="line">            <span class="keyword">if</span> i+<span class="number">1</span> <span class="keyword">in</span> KO_idx:</span><br><span class="line">                k = np.where(KO_idx==i+<span class="number">1</span>)[<span class="number">0</span>]</span><br><span class="line">                self.grid[update_bool_idx, i+<span class="number">1</span>] = rbt[k]  </span><br><span class="line"></span><br><span class="line">            Q = self.M2.dot(self.grid[<span class="number">1</span>:-<span class="number">1</span>, i+<span class="number">1</span>])</span><br><span class="line">            </span><br><span class="line">            Q[<span class="number">0</span>] += self.l[<span class="number">0</span>]*(self.dt*self.grid[<span class="number">0</span>, i] +self.dt*self.grid[<span class="number">0</span>, i+<span class="number">1</span>] )</span><br><span class="line">            Q[-<span class="number">1</span>] += self.u[-<span class="number">1</span>]*(self.dt*self.grid[-<span class="number">1</span>, i]+self.dt*self.grid[-<span class="number">1</span>, i+<span class="number">1</span>] )</span><br><span class="line">            </span><br><span class="line">            Ux = sla.solve_triangular( M_lower, Q, lower=<span class="literal">True</span> )</span><br><span class="line">            self.grid[<span class="number">1</span>:-<span class="number">1</span>, i] = sla.solve_triangular( M_upper, Ux, lower=<span class="literal">False</span> )</span><br><span class="line">            </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_interpolate_</span>(<span class="params">self</span>):</span><br><span class="line">        tck = spi.splrep( self.Svec, self.grid[:,<span class="number">0</span>], k=<span class="number">3</span> )</span><br><span class="line">        <span class="keyword">return</span> spi.splev( self.St, tck )</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">price</span>(<span class="params">self</span>):</span><br><span class="line">        self._set_terminal_condition_()</span><br><span class="line">        self._set_boundary_condition_()</span><br><span class="line">        self._set_coefficient_()</span><br><span class="line">        self._solve_()</span><br><span class="line">        <span class="keyword">return</span> self._interpolate_()/self.S * self.Principal</span><br></pre></td></tr></table></figure>
+<h1 id="定价雪球"><a href="#定价雪球" class="headerlink" title="定价雪球"></a>定价雪球</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Snowball</span>(<span class="title class_ inherited__">Snowball_Parameters</span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    计算雪球期权的价格</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__(**kwargs)</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">compute_price</span>(<span class="params">self, **kwargs</span>):</span><br><span class="line">        default_kwargs = self.__dict__.copy()</span><br><span class="line">        default_kwargs.update(kwargs)</span><br><span class="line">        case1 = Snowball_One_Touch_Up(**default_kwargs)</span><br><span class="line">        case2 = Snowball_Double_No_Touch(**default_kwargs)</span><br><span class="line">        case3_1 = Snowball_Up_Out_Put(**default_kwargs)</span><br><span class="line">        case3_2 = Snowball_Double_Knock_Out_Put(**default_kwargs)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># print(&quot;Computing prices for different cases:&quot;)</span></span><br><span class="line">        </span><br><span class="line">        V1 = case1.price()</span><br><span class="line">        <span class="comment"># print(&quot;1. Knock-out: &#123;:.2f&#125;&quot;.format(V1))</span></span><br><span class="line">        </span><br><span class="line">        V2 = case2.price()</span><br><span class="line">        <span class="comment"># print(&quot;2. Not knock-out and not knock-in: &#123;:.2f&#125;&quot;.format(V2))</span></span><br><span class="line">        </span><br><span class="line">        V3 = case3_2.price() - case3_1.price()</span><br><span class="line">        <span class="comment"># print(&quot;3. Not knock-out and knock-in: &#123;:.2f&#125;&quot;.format(V3))</span></span><br><span class="line">        </span><br><span class="line">        V = V1 + V2 + V3</span><br><span class="line">        <span class="comment"># print(&quot;---------------------------------------------&quot;)</span></span><br><span class="line">        <span class="comment"># print(&quot;Option price: &#123;:.2f&#125;&quot;.format(V))</span></span><br><span class="line">        self.P = &#123;<span class="string">&quot;V&quot;</span>:[V, V1, V2, V3],<span class="string">&quot;grid&quot;</span>:[case1.grid,case2.grid,case3_1.grid,case3_2.grid]</span><br><span class="line">               ,<span class="string">&quot;Svec&quot;</span>:[case1.Svec,case2.Svec,case3_1.Svec,case3_2.Svec]&#125;</span><br><span class="line">        <span class="keyword">return</span> self.P</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">greeks_vega</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment">#! 需要mid吗，还是+1</span></span><br><span class="line">        epsilon = <span class="number">0.01</span></span><br><span class="line"><span class="comment">#         P_base = self.compute_price()[0]</span></span><br><span class="line">        P_vega1 = self.compute_price(sigma = self.sigma+epsilon)[<span class="string">&#x27;V&#x27;</span>][<span class="number">0</span>]</span><br><span class="line">        P_vega2 = self.compute_price(sigma = self.sigma-epsilon)[<span class="string">&#x27;V&#x27;</span>][<span class="number">0</span>]</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span>  (P_vega2 - P_vega1) / (<span class="number">2</span>*epsilon*self.Principal)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">interpolate</span>(<span class="params">self,Svec,grid,S,J</span>):</span><br><span class="line">        tck = spi.splrep( Svec, grid[:,J], k=<span class="number">3</span> )</span><br><span class="line">        <span class="keyword">return</span> spi.splev( S, tck )</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">greeks_delta</span>(<span class="params">self, percentile=<span class="number">1</span>, J=<span class="number">0</span></span>):</span><br><span class="line">        epsilon = <span class="number">0.01</span></span><br><span class="line">        <span class="comment"># P = self.compute_price(sigma = self.sigma)</span></span><br><span class="line">        </span><br><span class="line">        P_base_1 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">0</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">0</span>],self.S * percentile,J )</span><br><span class="line">        P_base_2 =  self.T * self.Bonus_Coupon * np.exp(-self.r*self.T)  - self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">1</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">1</span>],self.S * percentile,J ) </span><br><span class="line">        P_base_3 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">2</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">2</span>],self.S * percentile,J )/(self.S * percentile)</span><br><span class="line">        P_base_4 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">3</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">3</span>],self.S * percentile,J )/(self.S * percentile)</span><br><span class="line">        P_base = P_base_1 +  P_base_2 - P_base_3 + P_base_4</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line">        P1_delta_1 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">0</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">0</span>],self.S * percentile *(<span class="number">1</span> + epsilon),J)</span><br><span class="line">        P1_delta_2 = self.T * self.Bonus_Coupon * np.exp(-self.r*self.T)  - self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">1</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">1</span>],self.S * percentile *(<span class="number">1</span> + epsilon),J)</span><br><span class="line">        P1_delta_3 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">2</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">2</span>],self.S * percentile *(<span class="number">1</span> + epsilon),J)/(self.S * percentile *(<span class="number">1</span> + epsilon))</span><br><span class="line">        P1_delta_4 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">3</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">3</span>],self.S * percentile *(<span class="number">1</span> + epsilon),J)/(self.S * percentile *(<span class="number">1</span> + epsilon))</span><br><span class="line">        P1_delta = P1_delta_1 + P1_delta_2 - P1_delta_3 + P1_delta_4</span><br><span class="line"></span><br><span class="line">        P2_delta_1 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">0</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">0</span>],self.S * percentile *(<span class="number">1</span> - epsilon),J)</span><br><span class="line">        P2_delta_2 = self.T * self.Bonus_Coupon * np.exp(-self.r*self.T)  -self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">1</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">1</span>],self.S * percentile *(<span class="number">1</span> - epsilon),J)</span><br><span class="line">        P2_delta_3 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">2</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">2</span>],self.S * percentile *(<span class="number">1</span> - epsilon),J)/(self.S * percentile *(<span class="number">1</span> - epsilon))</span><br><span class="line">        P2_delta_4 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">3</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">3</span>],self.S * percentile *(<span class="number">1</span> - epsilon),J)/(self.S * percentile *(<span class="number">1</span> - epsilon))</span><br><span class="line">        P2_delta = P2_delta_1 + P2_delta_2 - P2_delta_3 + P2_delta_4</span><br><span class="line"></span><br><span class="line">        delta1 = self.Principal * (P1_delta - P2_delta) / (<span class="number">2</span> * self.S * percentile * epsilon) <span class="comment">#* self.S * percentile</span></span><br><span class="line">        delta2 =  (P1_delta - P2_delta) / (<span class="number">2</span> * self.S * percentile * epsilon) * self.S * percentile</span><br><span class="line">        <span class="comment"># gamma = (P1_delta + P2_delta - 2 * P_base) / ((self.S * percentile) **2 * epsilon**2)</span></span><br><span class="line">        <span class="keyword">return</span> (delta1,delta2)</span><br></pre></td></tr></table></figure>
+<p>该雪球结构期权的定价公式如下：</p>
+<script type="math/tex; mode=display">
+\begin{align*}
+V_{\text{snowball}} &= V_1 + V_2 + V_3 \\
+    & = \text{OTU}\left(R=\left[\frac{3c_1\%}{12},\frac{4c_1\%}{12},\cdots,\frac{12c_1\%}{12}\right]\right)  \\
+    & + \text{DNT}(R=c_2\%) \\
+    & + \frac{1}{S_0}\times[\text{DKOP}(K=S_0,K_{out},K_{in}) - \text{UOP}(K=S_0,K_{out})]
+\end{align*}</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(Principal,S,T,KI_Barrier,KO_Barrier,KO_Coupon,Bonus_Coupon) = (<span class="number">10</span>**<span class="number">6</span>,<span class="number">6500</span>,<span class="number">1</span>,<span class="number">0.8</span>,<span class="number">1.03</span>,<span class="number">0.25</span>,<span class="number">0.25</span>)</span><br><span class="line">T_KO = np.arange(<span class="number">30</span>*<span class="number">3</span>/<span class="number">360</span>,<span class="number">30</span>*<span class="number">12.1</span>/<span class="number">360</span>,<span class="number">30</span>/<span class="number">360</span>)  <span class="comment">#* 这里选12.1是因为最后一天是360/365</span></span><br><span class="line">(r, div, sigma) = (<span class="number">0.03</span>, <span class="number">0</span>, <span class="number">0.2455</span>)</span><br><span class="line">(Ns, Nt) = (<span class="number">500</span>, <span class="built_in">int</span>(np.ceil(T*<span class="number">360</span>) ) ) <span class="comment">#! 分成多少份365，还是360</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">pde = Snowball(Principal = Principal,T = T, S = S, St = <span class="number">6500</span>, KI_Barrier = KI_Barrier, KO_Barrier = KO_Barrier, KO_Coupon = KO_Coupon, Bonus_Coupon = Bonus_Coupon, r= r, div = div, sigma = sigma, Ns = Ns, Nt = Nt, T_KO = T_KO)</span><br><span class="line">pde.print_parameters()</span><br><span class="line">tic = time.time()</span><br><span class="line"><span class="comment"># print(&quot;Computing prices for different cases:&quot;)</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Option price: &#123;:.2f&#125;&quot;</span>.<span class="built_in">format</span>(pde.compute_price()[<span class="string">&#x27;V&#x27;</span>][<span class="number">0</span>]))</span><br><span class="line"><span class="built_in">print</span>( <span class="string">&quot;---------------------------------------------&quot;</span> )</span><br></pre></td></tr></table></figure>
+<pre><code>---------------------------------------------
+Pricing a Snowball option using PDE
+---------------------------------------------
+Parameters of Snowball Option Pricer:
+---------------------------------------------
+Years Until Expiration =  1
+Principal =  1000000
+Underlying Asset Price =  6500
+Knock-in Barrier =  0.8
+Autocall Barrier =  1.03
+Knock-in Price =  5200.0
+Autocall Price =  6695.0
+Autocall Coupon =  0.25
+Bonus Coupon =  0.25
+Risk-Free Rate = 0.03
+Dividend Rate = 0
+Volatility =  0.2455
+Discrete underlying points = 500
+Discrete time points = 360
+Time-Step =  0.002777777777777778
+Knock-in Price =  5200.0
+Knock-out Price =  6695.0
+Knock out time =  [0.25       0.33333333 0.41666667 0.5        0.58333333 0.66666667
+ 0.75       0.83333333 0.91666667 1.        ]
+---------------------------------------------
+Option price: 20390.14
+---------------------------------------------
+</code></pre><h2 id="Delta分析"><a href="#Delta分析" class="headerlink" title="Delta分析"></a>Delta分析</h2><h3 id="不同波动率对应的delta曲面"><a href="#不同波动率对应的delta曲面" class="headerlink" title="不同波动率对应的delta曲面"></a>不同波动率对应的delta曲面</h3><p>计算公式:</p>
+<script type="math/tex; mode=display">
+Delta =  \frac{f(S_0+\Delta S)-f(S_0-\Delta S)}{2\Delta S/S_0}</script><p>其中 $\Delta S = 0.01 \times S_0$</p>
+<p><strong>波动率曲面</strong>：选取雪球发行日当天，观察不同波动率条件下（0.1-0.45），雪球Greeks在不同资产价格的变动情况。波动率越低，Delta在敲入与敲出水平线附近变动越剧烈，以上图为例，波动率为10%时，Delta在敲入水平处高达4.77，在敲出水平最低达到-0.92</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">price_set = np.linspace(<span class="number">0.8</span> ,<span class="number">1.3</span>, <span class="number">50</span>)</span><br><span class="line">sigma_set = np.linspace(<span class="number">0.1</span> , <span class="number">0.45</span>, <span class="number">20</span>)</span><br><span class="line"></span><br><span class="line">price_set_,sigma_set_ = np.meshgrid(price_set,sigma_set )</span><br><span class="line">option_set1 = np.zeros_like(sigma_set_)</span><br><span class="line">option_set2 = np.zeros_like(sigma_set_)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> idx,sigma <span class="keyword">in</span> <span class="built_in">enumerate</span>(sigma_set):</span><br><span class="line">    pde = Snowball(sigma = sigma)</span><br><span class="line">    pde.compute_price()</span><br><span class="line">    <span class="keyword">for</span> idx_,per <span class="keyword">in</span> <span class="built_in">enumerate</span>(price_set):</span><br><span class="line">        option_set1[idx,idx_] = pde.greeks_delta(per,<span class="number">0</span>)[<span class="number">0</span>]</span><br><span class="line">        option_set2[idx,idx_] = pde.greeks_delta(per,<span class="number">0</span>)[<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">surface = go.Surface(x=price_set_, y=sigma_set_, z=option_set1)</span><br><span class="line">fig = go.Figure(data=[surface])</span><br><span class="line">fig.update_layout(</span><br><span class="line">    scene=<span class="built_in">dict</span>(</span><br><span class="line">        aspectmode=<span class="string">&#x27;cube&#x27;</span>,</span><br><span class="line">        xaxis_title=<span class="string">&#x27;Price&#x27;</span>,</span><br><span class="line">        yaxis_title=<span class="string">&#x27;Sigma&#x27;</span>,</span><br><span class="line">        zaxis_title=<span class="string">&#x27;Delta&#x27;</span></span><br><span class="line">    ),</span><br><span class="line">    title=<span class="string">&#x27;Delta surfaces corresponding to different volatility at start-date&#x27;</span>,</span><br><span class="line">        width=<span class="number">800</span>,  </span><br><span class="line">    height=<span class="number">600</span>  </span><br><span class="line">)</span><br><span class="line">fig.update_traces(opacity=<span class="number">0.7</span>)</span><br><span class="line">fig.show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">surface = go.Surface(x=price_set_, y=sigma_set_, z=option_set2)</span><br><span class="line">fig = go.Figure(data=[surface])</span><br><span class="line">fig.update_layout(</span><br><span class="line">    scene=<span class="built_in">dict</span>(</span><br><span class="line">        aspectmode=<span class="string">&#x27;cube&#x27;</span>,</span><br><span class="line">        xaxis_title=<span class="string">&#x27;Price&#x27;</span>,</span><br><span class="line">        yaxis_title=<span class="string">&#x27;Sigma&#x27;</span>,</span><br><span class="line">        zaxis_title=<span class="string">&#x27;Delta&#x27;</span></span><br><span class="line">    ),</span><br><span class="line">    title=<span class="string">&#x27;Delta surfaces corresponding to different volatility at start-date&#x27;</span>,</span><br><span class="line">        width=<span class="number">800</span>,  </span><br><span class="line">    height=<span class="number">600</span>  </span><br><span class="line">)</span><br><span class="line">fig.update_traces(opacity=<span class="number">0.7</span>)</span><br><span class="line">fig.show()</span><br></pre></td></tr></table></figure>
+<h3 id="不同日期下对应的delta曲面"><a href="#不同日期下对应的delta曲面" class="headerlink" title="不同日期下对应的delta曲面"></a>不同日期下对应的delta曲面</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">price_set = np.linspace(<span class="number">0.8</span> ,<span class="number">1.3</span>, <span class="number">50</span>)</span><br><span class="line">Nt_set = np.linspace(<span class="number">0</span>,Nt,Nt+<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">price_set_,Nt_set_ = np.meshgrid(price_set,Nt_set )</span><br><span class="line">option_set = np.zeros_like(Nt_set_)</span><br><span class="line"></span><br><span class="line">pde = Snowball(sigma = <span class="number">0.2</span>)</span><br><span class="line">pde.compute_price()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> idx,t <span class="keyword">in</span> <span class="built_in">enumerate</span>(Nt_set):</span><br><span class="line">    <span class="keyword">for</span> idx_,per <span class="keyword">in</span> <span class="built_in">enumerate</span>(price_set):</span><br><span class="line">        option_set[idx,idx_] = pde.greeks_delta(per,idx)[<span class="number">0</span>]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">surface = go.Surface(x=price_set_, y=Nt_set_, z=option_set)</span><br><span class="line">fig = go.Figure(data=[surface])</span><br><span class="line">fig.update_layout(</span><br><span class="line">    scene=<span class="built_in">dict</span>(</span><br><span class="line">        aspectmode=<span class="string">&#x27;cube&#x27;</span>,</span><br><span class="line">        xaxis_title=<span class="string">&#x27;Price&#x27;</span>,</span><br><span class="line">        yaxis_title=<span class="string">&#x27;Nt&#x27;</span>,</span><br><span class="line">        zaxis_title=<span class="string">&#x27;Delta&#x27;</span></span><br><span class="line">    ),</span><br><span class="line">    title=<span class="string">&#x27;Delta surfaces corresponding to different date at sigma = 0.2&#x27;</span>,</span><br><span class="line">        width=<span class="number">800</span>,  </span><br><span class="line">    height=<span class="number">600</span>  </span><br><span class="line">)</span><br><span class="line">fig.update_traces(opacity=<span class="number">0.7</span>)</span><br><span class="line">fig.show()</span><br></pre></td></tr></table></figure>
+<h2 id="Gamma分析"><a href="#Gamma分析" class="headerlink" title="Gamma分析"></a>Gamma分析</h2><p>计算公式:</p>
+<script type="math/tex; mode=display">
+\Gamma =  \frac{f^\prime(S_0+\Delta S)-f^\prime(S_0-\Delta S)}{2\Delta S/S_0}</script><p>其中$\Delta S = 0.01 \times S_0$。</p>
+<p><strong>波动率曲面</strong>：选取雪球发行日当天，观察不同波动率条件下（0.1-0.45），雪球Greeks在不同资产价格的变动情况。波动率越低，Delta在敲入与敲出水平线附近变动越剧烈，以上图为例，波动率为10%时，Delta在敲入水平处高达4.77，在敲出水平最低达到-0.92</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Snowball</span>(<span class="title class_ inherited__">Snowball_Parameters</span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    计算雪球期权的价格</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__(**kwargs)</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">compute_price</span>(<span class="params">self, **kwargs</span>):</span><br><span class="line">        default_kwargs = self.__dict__.copy()</span><br><span class="line">        default_kwargs.update(kwargs)</span><br><span class="line">        case1 = Snowball_One_Touch_Up(**default_kwargs)</span><br><span class="line">        case2 = Snowball_Double_No_Touch(**default_kwargs)</span><br><span class="line">        case3_1 = Snowball_Up_Out_Put(**default_kwargs)</span><br><span class="line">        case3_2 = Snowball_Double_Knock_Out_Put(**default_kwargs)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># print(&quot;Computing prices for different cases:&quot;)</span></span><br><span class="line">        </span><br><span class="line">        V1 = case1.price()</span><br><span class="line">        <span class="comment"># print(&quot;1. Knock-out: &#123;:.2f&#125;&quot;.format(V1))</span></span><br><span class="line">        </span><br><span class="line">        V2 = case2.price()</span><br><span class="line">        <span class="comment"># print(&quot;2. Not knock-out and not knock-in: &#123;:.2f&#125;&quot;.format(V2))</span></span><br><span class="line">        </span><br><span class="line">        V3 = case3_2.price() - case3_1.price()</span><br><span class="line">        <span class="comment"># print(&quot;3. Not knock-out and knock-in: &#123;:.2f&#125;&quot;.format(V3))</span></span><br><span class="line">        </span><br><span class="line">        V = V1 + V2 + V3</span><br><span class="line">        <span class="comment"># print(&quot;---------------------------------------------&quot;)</span></span><br><span class="line">        <span class="comment"># print(&quot;Option price: &#123;:.2f&#125;&quot;.format(V))</span></span><br><span class="line">        self.P = &#123;<span class="string">&quot;V&quot;</span>:[V, V1, V2, V3],<span class="string">&quot;grid&quot;</span>:[case1.grid,case2.grid,case3_1.grid,case3_2.grid]</span><br><span class="line">               ,<span class="string">&quot;Svec&quot;</span>:[case1.Svec,case2.Svec,case3_1.Svec,case3_2.Svec]&#125;</span><br><span class="line">        <span class="keyword">return</span> self.P</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">greeks_vega</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment">#! 需要mid吗，还是+1</span></span><br><span class="line">        epsilon = <span class="number">0.01</span></span><br><span class="line"><span class="comment">#         P_base = self.compute_price()[0]</span></span><br><span class="line">        P_vega1 = self.compute_price(sigma = self.sigma+epsilon)[<span class="string">&#x27;V&#x27;</span>][<span class="number">0</span>]</span><br><span class="line">        P_vega2 = self.compute_price(sigma = self.sigma-epsilon)[<span class="string">&#x27;V&#x27;</span>][<span class="number">0</span>]</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span>  (P_vega2 - P_vega1) / (<span class="number">2</span>*epsilon*self.Principal)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">interpolate</span>(<span class="params">self,Svec,grid,S,J</span>):</span><br><span class="line">        tck = spi.splrep( Svec, grid[:,J], k=<span class="number">3</span> )</span><br><span class="line">        <span class="keyword">return</span> spi.splev( S, tck )</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">greeks_delta</span>(<span class="params">self, percentile, J</span>):</span><br><span class="line">        epsilon = <span class="number">0.01</span></span><br><span class="line">        <span class="comment"># P = self.compute_price(sigma = self.sigma)</span></span><br><span class="line">        </span><br><span class="line">        P_base_1 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">0</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">0</span>],self.S * percentile,J )</span><br><span class="line">        P_base_2 =  self.T * self.Bonus_Coupon * np.exp(-self.r*self.T)  - self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">1</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">1</span>],self.S * percentile,J ) </span><br><span class="line">        P_base_3 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">2</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">2</span>],self.S * percentile,J )/(self.S * percentile)</span><br><span class="line">        P_base_4 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">3</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">3</span>],self.S * percentile,J )/(self.S * percentile)</span><br><span class="line">        P_base = P_base_1 +  P_base_2 - P_base_3 + P_base_4</span><br><span class="line"></span><br><span class="line">        </span><br><span class="line">        P1_delta_1 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">0</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">0</span>],self.S * percentile *(<span class="number">1</span> + epsilon),J)</span><br><span class="line">        P1_delta_2 = self.T * self.Bonus_Coupon * np.exp(-self.r*self.T)  - self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">1</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">1</span>],self.S * percentile *(<span class="number">1</span> + epsilon),J)</span><br><span class="line">        P1_delta_3 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">2</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">2</span>],self.S * percentile *(<span class="number">1</span> + epsilon),J)/(self.S * percentile *(<span class="number">1</span> + epsilon))</span><br><span class="line">        P1_delta_4 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">3</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">3</span>],self.S * percentile *(<span class="number">1</span> + epsilon),J)/(self.S * percentile *(<span class="number">1</span> + epsilon))</span><br><span class="line">        P1_delta = P1_delta_1 + P1_delta_2 - P1_delta_3 + P1_delta_4</span><br><span class="line"></span><br><span class="line">        P2_delta_1 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">0</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">0</span>],self.S * percentile *(<span class="number">1</span> - epsilon),J)</span><br><span class="line">        P2_delta_2 = self.T * self.Bonus_Coupon * np.exp(-self.r*self.T)  -self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">1</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">1</span>],self.S * percentile *(<span class="number">1</span> - epsilon),J)</span><br><span class="line">        P2_delta_3 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">2</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">2</span>],self.S * percentile *(<span class="number">1</span> - epsilon),J)/(self.S * percentile *(<span class="number">1</span> - epsilon))</span><br><span class="line">        P2_delta_4 = self.interpolate(self.P[<span class="string">&#x27;Svec&#x27;</span>][<span class="number">3</span>],self.P[<span class="string">&#x27;grid&#x27;</span>][<span class="number">3</span>],self.S * percentile *(<span class="number">1</span> - epsilon),J)/(self.S * percentile *(<span class="number">1</span> - epsilon))</span><br><span class="line">        P2_delta = P2_delta_1 + P2_delta_2 - P2_delta_3 + P2_delta_4</span><br><span class="line"></span><br><span class="line">        delta = (P1_delta - P2_delta) / (<span class="number">2</span> * self.S * percentile * epsilon) * self.S * percentile</span><br><span class="line">        gamma = (P1_delta + P2_delta - <span class="number">2</span> * P_base) / ((self.S * percentile) **<span class="number">2</span> * epsilon**<span class="number">2</span>)</span><br><span class="line">        <span class="keyword">return</span> (delta,gamma)</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://tobi0520.github.io/">yangzhi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://tobi0520.github.io/">https://tobi0520.github.io/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">此文章版权归yangzhi所有，如有转载，请注明來自原作者</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9C%9F%E6%9D%83/">期权</a></div><div class="post_share"><div class="social-share" data-image="https://xqimg.imedao.com/1699a27b966338203fe6834e.png!800.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://lib.baomitu.com/social-share.js/1.0.16/css/share.min.css" media="print" onload="this.media='all'"><script src="https://lib.baomitu.com/social-share.js/1.0.16/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/07/12/note/linux_conda/" title="Linux使用操作(一)————conda的安装"><img class="cover" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/300px-Tux.svg.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Linux使用操作(一)————conda的安装</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://dogefs.s3.ladydaily.com/~/source/wallhaven/full/o5/wallhaven-o5yqr5.jpg?w=2560&amp;h=1440&amp;fmt=webp" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">Yang Zhi</div><div class="author-info__description">记录学习路上踩过的坑</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/tobi0520"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/tobi0520" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:yangzhi5677@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">学习维护个人网站中。。。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%81%8F%E5%BE%AE%E5%88%86%E6%96%B9%E7%A8%8B%E6%9C%89%E9%99%90%E5%B7%AE%E5%88%86%E5%AE%9A%E4%BB%B7"><span class="toc-number">1.</span> <span class="toc-text">偏微分方程有限差分定价</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E9%9B%AA%E7%90%83%E8%87%AA%E5%8A%A8%E6%95%B2%E5%87%BA-Snowball-AutoCallable-%E4%BA%A7%E5%93%81"><span class="toc-number">1.1.</span> <span class="toc-text">1.雪球自动敲出 (Snowball AutoCallable) 产品</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-%E4%BA%A4%E6%98%93%E5%AE%9E%E8%AF%81"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 交易实证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-%E6%83%85%E6%99%AF%E5%88%86%E6%9E%90"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 情景分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E9%99%90%E5%B7%AE%E5%88%86%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">有限差分法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E4%BE%8B%E5%AD%90%E2%80%94%E2%80%94%E6%AC%A7%E5%BC%8F%E7%9C%8B%E6%B6%A8%E6%9C%9F%E6%9D%83"><span class="toc-number">1.3.</span> <span class="toc-text">简单的例子——欧式看涨期权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E6%95%B0%E5%AD%A6%E7%AC%A6%E5%8F%B7%E4%B8%8E%E5%8F%82%E6%95%B0%E5%90%8D%E7%A7%B0%EF%BC%9A"><span class="toc-number">1.4.</span> <span class="toc-text">定义数学符号与参数名称：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E9%99%88%E8%BF%B0"><span class="toc-number">1.4.1.</span> <span class="toc-text">问题陈述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E9%99%90%E5%B7%AE%E5%88%86%E6%96%B9%E6%B3%95%E2%80%94%E2%80%94%E6%B1%82%E8%A7%A3%E5%BE%AE%E5%88%86"><span class="toc-number">1.4.2.</span> <span class="toc-text">有限差分方法——求解微分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LU%E5%88%86%E8%A7%A3%E6%B3%95"><span class="toc-number">1.4.3.</span> <span class="toc-text">LU分解法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#LU%E5%88%86%E8%A7%A3%E6%B3%95-1"><span class="toc-number">1.4.3.1.</span> <span class="toc-text">LU分解法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LU%E8%BF%AD%E4%BB%A3%E6%AD%A5%E9%AA%A4%E5%88%86%E6%9E%90"><span class="toc-number">1.4.3.2.</span> <span class="toc-text">LU迭代步骤分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LU%E4%BC%98%E5%8A%BF%E4%B8%8E%E5%8A%A3%E5%8A%BF"><span class="toc-number">1.4.3.3.</span> <span class="toc-text">LU优势与劣势</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9B%AA%E7%90%83%E4%BA%A7%E5%93%81%E4%BB%B7%E5%80%BC"><span class="toc-number">2.</span> <span class="toc-text">雪球产品价值</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%83%85%E6%99%AF1-%E6%95%B2%E5%87%BA"><span class="toc-number">2.1.</span> <span class="toc-text">情景1: 敲出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%83%85%E6%99%AF2-%E6%9C%AA%E6%95%B2%E5%85%A5%E6%9C%AA%E6%95%B2%E5%87%BA"><span class="toc-number">2.2.</span> <span class="toc-text">情景2: 未敲入未敲出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%83%85%E6%99%AF3-%E6%95%B2%E5%85%A5%E6%9C%AA%E6%95%B2%E5%87%BA"><span class="toc-number">2.3.</span> <span class="toc-text">情景3: 敲入未敲出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#put-short-%E5%8D%96%E4%B8%80%E4%B8%AA%E7%9C%8B%E8%B7%8C%E6%9C%9F%E6%9D%83"><span class="toc-number">2.3.1.</span> <span class="toc-text">put short 卖一个看跌期权</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9A%E4%BB%B7%E9%9B%AA%E7%90%83"><span class="toc-number">3.</span> <span class="toc-text">定价雪球</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Delta%E5%88%86%E6%9E%90"><span class="toc-number">3.1.</span> <span class="toc-text">Delta分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E5%90%8C%E6%B3%A2%E5%8A%A8%E7%8E%87%E5%AF%B9%E5%BA%94%E7%9A%84delta%E6%9B%B2%E9%9D%A2"><span class="toc-number">3.1.1.</span> <span class="toc-text">不同波动率对应的delta曲面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E5%90%8C%E6%97%A5%E6%9C%9F%E4%B8%8B%E5%AF%B9%E5%BA%94%E7%9A%84delta%E6%9B%B2%E9%9D%A2"><span class="toc-number">3.1.2.</span> <span class="toc-text">不同日期下对应的delta曲面</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gamma%E5%88%86%E6%9E%90"><span class="toc-number">3.2.</span> <span class="toc-text">Gamma分析</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/08/26/option/pde_snowball/" title="雪球期权——PDE定价方法详解"><img src="https://xqimg.imedao.com/1699a27b966338203fe6834e.png!800.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="雪球期权——PDE定价方法详解"/></a><div class="content"><a class="title" href="/2023/08/26/option/pde_snowball/" title="雪球期权——PDE定价方法详解">雪球期权——PDE定价方法详解</a><time datetime="2023-08-26T00:00:00.000Z" title="发表于 2023-08-26 08:00:00">2023-08-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/07/12/note/linux_conda/" title="Linux使用操作(一)————conda的安装"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Tux.svg/300px-Tux.svg.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux使用操作(一)————conda的安装"/></a><div class="content"><a class="title" href="/2023/07/12/note/linux_conda/" title="Linux使用操作(一)————conda的安装">Linux使用操作(一)————conda的安装</a><time datetime="2023-07-12T00:00:00.000Z" title="发表于 2023-07-12 08:00:00">2023-07-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/07/04/NLP/chatglm6b_tuning/" title="ChatGLM-6B微调"><img src="https://zhipuaiadmin.aminer.cn/upload/29965d686cc402633f4a4df5de8cc182.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ChatGLM-6B微调"/></a><div class="content"><a class="title" href="/2023/07/04/NLP/chatglm6b_tuning/" title="ChatGLM-6B微调">ChatGLM-6B微调</a><time datetime="2023-07-04T00:00:00.000Z" title="发表于 2023-07-04 08:00:00">2023-07-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/07/03/note/chatgpt_account/" title="chatgpt注册"><img src="https://www.freedidi.com/wp-content/uploads/2023/05/4d76c01a295cc5cda2029d9147b59aef.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="chatgpt注册"/></a><div class="content"><a class="title" href="/2023/07/03/note/chatgpt_account/" title="chatgpt注册">chatgpt注册</a><time datetime="2023-07-03T00:00:00.000Z" title="发表于 2023-07-03 08:00:00">2023-07-03</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/06/13/d2l/preliminary/" title="动手深度学习(一)-预备知识"><img src="https://zh.d2l.ai/_images/front.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="动手深度学习(一)-预备知识"/></a><div class="content"><a class="title" href="/2023/06/13/d2l/preliminary/" title="动手深度学习(一)-预备知识">动手深度学习(一)-预备知识</a><time datetime="2023-06-13T00:00:00.000Z" title="发表于 2023-06-13 08:00:00">2023-06-13</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://xqimg.imedao.com/1699a27b966338203fe6834e.png!800.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 By Yang Zhi</div><div class="footer_custom_text">Hi, welcome to my <a target="_blank" rel="noopener" href="https://butterfly.js.org/">blog</a>!😬😬😬</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.17/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://cdnjs.cloudflare.com/ajax/libs/butterfly-extsrc/1.1.3/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script async src="//at.alicdn.com/t/font_2032782_8d5kxvn09md.js"></script><!-- hexo injector body_end end --></body></html>
